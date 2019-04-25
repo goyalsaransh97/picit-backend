@@ -1,0 +1,282 @@
+import java.net.*;
+import java.io.*;
+import org.json.simple.*;
+import org.json.simple.parser.*; 
+import java.util.*;
+import java.sql.*;  
+import java.nio.charset.*; 
+// import org.json.JSONArray;
+
+public class GreetingServer extends Thread {
+   private ServerSocket serverSocket;
+   private Picit picit;
+   public GreetingServer(int port) throws IOException {
+      serverSocket = new ServerSocket(port);
+      // serverSocket.setSoTimeout(10000);
+   }
+
+   public JSONObject process(JSONObject obj){
+      String function = (String) obj.get("Function");
+      JSONObject ans = new JSONObject();
+      switch (function) {
+         case "createUser":
+            String emailId = (String) obj.get("emailId");
+            String userName =(String) obj.get("userName");
+            // String password =(String) obj.get("password");
+            try{
+               int temp = picit.user.createUser(emailId, userName);
+               ans.put("answer",temp);
+            } catch (Exception e){e.printStackTrace();ans.put("answer",-1);}
+            
+            break;
+         case "createGroup":
+            // int[] userIds, int creatorUserId, String groupName
+            JSONArray uids = (JSONArray) obj.get("userIds");
+            int[] userIds = new int[uids.size()];
+            for (int i=0; i<uids.size(); i++) {
+               userIds[i] = (int)(long) uids.get(i);
+            } 
+            int creatorUserId = (int)(long) obj.get("creatorUserId");
+            String groupName = (String) obj.get("groupName");
+            
+            try{
+               int temp = picit.group.createGroup(userIds, creatorUserId, groupName);
+               ans.put("answer",temp);
+            } catch (Exception e){e.printStackTrace();ans.put("answer",-1);}
+            break;
+         case "addUserToGroup":
+            int userId = (int)(long) obj.get("userId");
+            int groupId =(int)(long) obj.get("groupId");
+            boolean isActive =(boolean) obj.get("isActive");
+            
+            try{
+               boolean temp = picit.group.addUserToGroup(userId, groupId, isActive);
+               ans.put("answer",temp);
+            } catch (Exception e){e.printStackTrace();ans.put("answer",false);}
+            break;
+         case "removeUserFromGroup":
+            userId = (int)(long) obj.get("userId");
+            groupId =(int)(long) obj.get("groupId");
+            // boolean isActive =(boolean) obj.get("isActive");
+            try{
+               boolean temp = picit.group.removeUserFromGroup(userId, groupId);
+               ans.put("answer",temp);
+            } catch (Exception e){e.printStackTrace();ans.put("answer",false);}
+            break;
+         case "setGroupActive":
+            userId = (int)(long) obj.get("userId");
+            groupId =(int)(long) obj.get("groupId");
+            // boolean isActive =(boolean) obj.get("isActive");
+            try{
+               boolean temp = picit.group.setGroupActive(userId, groupId);
+               ans.put("answer",temp);
+            } catch (Exception e){e.printStackTrace();ans.put("answer",false);}
+            break;
+         case "setGroupInactive":
+            userId = (int)(long) obj.get("userId");
+            groupId =(int)(long) obj.get("groupId");
+            // boolean isActive =(boolean) obj.get("isActive");
+            try{
+               boolean temp = picit.group.setGroupInactive(userId, groupId);
+               ans.put("answer",temp);
+            } catch (Exception e){e.printStackTrace();ans.put("answer",false);}
+            break;
+         case "getGroupsOfUser":
+            userId = (int)(long) obj.get("userId");
+            try{
+               Vector<Integer> arr = picit.group.getGroupsOfUser(userId);
+               JSONArray temp = new JSONArray();
+               for (int i = 0; i < arr.size(); i++) {
+                  temp.add((long)(int) arr.get(i));
+              }
+               ans.put("answer",temp);
+            } catch (Exception e){e.printStackTrace();JSONArray arr = new JSONArray();ans.put("answer",arr);}
+            break;
+         case "uploadPicture":
+            userId = (int)(long) obj.get("userId");
+            String url = (String) obj.get("url");
+            try{
+               int temp = picit.picture.uploadPicture(userId, url);
+               ans.put("answer",temp);
+            } catch (Exception e){e.printStackTrace();ans.put("answer",-1);}
+            break;
+         case "sharePictureToGroup":
+            int picId = (int)(long) obj.get("picId");
+            userId = (int)(long) obj.get("userId");
+            groupId = (int)(long) obj.get("groupId");
+            url = (String) obj.get("url");
+            try{
+               boolean temp = picit.picture.sharePictureToGroup(picId,userId,groupId, url);
+               ans.put("answer",temp);
+            } catch (Exception e){e.printStackTrace();ans.put("answer",false);}
+            break;
+         case "getPicturesInGroup":
+            groupId = (int)(long) obj.get("groupId");
+            try{
+               Vector<String> arr = picit.picture.getPicturesInGroup(groupId);
+               JSONArray temp = new JSONArray();
+               for (int i = 0; i < arr.size(); i++) {
+                  temp.add(arr.get(i));
+              }
+               ans.put("answer",temp);
+            } catch (Exception e){e.printStackTrace();JSONArray arr = new JSONArray();ans.put("answer",arr);}
+            break;
+         case "createAlbum":
+            userId = (int)(long) obj.get("userId");
+            String albumName = (String) obj.get("albumName");
+            try{
+               int temp = picit.album.createAlbum(albumName,userId);
+               ans.put("answer",temp);
+            } catch (Exception e){e.printStackTrace();ans.put("answer",-1);}
+            break;
+         case "addPicturesToAlbum":
+            int albumId = (int)(long) obj.get("albumId");
+            uids = (JSONArray) obj.get("picIds");
+            int[] picIds = new int[uids.size()];
+            for (int i=0; i<uids.size(); i++) {
+               picIds[i] = (int)(long) uids.get(i);
+            }
+            try{
+               boolean temp = picit.album.addPicturesToAlbum(picIds,albumId);
+               ans.put("answer",temp);
+            } catch (Exception e){e.printStackTrace();ans.put("answer",false);}
+            break;
+         case "shareAlbumWithGroup":
+            albumId = (int)(long) obj.get("albumId");
+            groupId = (int)(long) obj.get("groupId");            
+            try{
+               boolean temp = picit.album.shareAlbumWithGroup(albumId,groupId);
+               ans.put("answer",temp);
+            } catch (Exception e){e.printStackTrace();ans.put("answer",false);}
+            break;
+         case "getAlbumsInGroup":
+            groupId = (int)(long) obj.get("groupId");
+            try{
+               Vector<Integer> arr = picit.album.getAlbumsInGroup(groupId);
+               JSONArray temp = new JSONArray();
+               for (int i = 0; i < arr.size(); i++) {
+                  temp.add(arr.get(i));
+              }
+               ans.put("answer",temp);
+            } catch (Exception e){e.printStackTrace();JSONArray arr = new JSONArray();ans.put("answer",arr);}
+            break;
+         case "getPicturesInAlbum":
+            albumId = (int)(long) obj.get("albumId");
+            try{
+               Vector<String> arr = picit.album.getPicturesInAlbum(albumId);
+               JSONArray temp = new JSONArray();
+               for (int i = 0; i < arr.size(); i++) {
+                  temp.add(arr.get(i));
+              }
+               ans.put("answer",temp);
+            } catch (Exception e){e.printStackTrace();JSONArray arr = new JSONArray();ans.put("answer",arr);}
+            break;
+         default:
+            ans.put("answer",-1);
+            // Vector<String> getPicturesInAlbum(int albumId)
+
+      }
+      return ans;
+   }
+
+   public void run() {
+            String url="jdbc:mysql://picit.cdefe3kkdqar.ap-south-1.rds.amazonaws.com:3306/picit";
+      String userName="admin";
+      String password="qwerty1234";
+
+      picit = new Picit();
+      
+      try{  
+         Class.forName("com.mysql.jdbc.Driver");  
+         picit.con = DriverManager.getConnection(url, userName, password);  
+
+
+         Statement stmt = picit.con.createStatement();  
+         ResultSet rs;
+
+         rs = stmt.executeQuery("select max(userId) from Users");
+         rs.next(); 
+         picit.userIdMax = rs.getInt(1) + 1;//0 if no users 
+
+         rs = stmt.executeQuery("select max(groupId) from Groups");  
+         rs.next(); 
+         picit.groupIdMax = rs.getInt(1) + 1;
+
+         rs = stmt.executeQuery("select max(picId) from Pictures");  
+         rs.next(); 
+         picit.picIdMax = rs.getInt(1) + 1;
+
+         rs = stmt.executeQuery("select max(albumId) from Albums");  
+         rs.next(); 
+         picit.albumIdMax = rs.getInt(1) + 1;
+
+         System.out.println(picit.userIdMax+", "+picit.groupIdMax+", "+picit.picIdMax+", "+picit.albumIdMax);
+      }catch(Exception e){
+       System.out.println(e);
+      } 
+
+      while(true) {
+         try {
+            System.out.println("Waiting for client on port " + 
+               serverSocket.getLocalPort() + "...");
+            Socket server = serverSocket.accept();
+            
+            System.out.println("Just connected to " + server.getRemoteSocketAddress());
+            DataInputStream in = new DataInputStream(server.getInputStream());
+            String get_req = in.readUTF();
+            System.out.println(get_req);
+            // Object temp = JSONParser().parse(get_req);
+            // JSONObject jobj = (JSONObject) temp;
+            JSONParser parser = new JSONParser();
+            JSONObject jobj = (JSONObject) parser.parse(get_req);
+            JSONObject ans = process(jobj);
+            // JSONObject jobj = new JSONObject(get_req);
+            System.out.println((String) jobj.get("Function"));
+            DataOutputStream out = new DataOutputStream(server.getOutputStream());
+            out.writeUTF(ans.toString());
+            server.close();
+            
+         } catch (SocketTimeoutException s) {
+            System.out.println("Socket timed out!");
+            break;
+         } catch (IOException e) {
+            e.printStackTrace();
+            break;
+         }
+         catch (Exception e) {
+            e.printStackTrace();
+            break;
+         }
+      }
+      // picit.con.close();  
+   }
+   
+   public static void main(String [] args) {
+      int port = Integer.parseInt("8500");
+      try {
+         Thread t = new GreetingServer(port);
+         t.start();
+      } catch (IOException e) {
+         e.printStackTrace();
+      }
+   }
+   
+   int createUser(String emailId, String userName){
+      System.out.println("");
+      return 1997;
+   }
+   int createGroup(int[] userIds, int creatorUserId, String groupName){
+      return 1998;
+   }
+   boolean addUserToGroup(int userId, int groupId, boolean isActive){
+      return true;
+   }
+   boolean removeUserFromGroup(int userId, int groupId){
+      return true;
+   }
+   Vector<Integer> getGroupsOfUser(int userId){
+      Vector<Integer> v = new Vector<Integer>();
+      return v;
+   }
+}
+

@@ -29,12 +29,31 @@ public class GreetingServer extends Thread {
             } catch (Exception e){e.printStackTrace();ans.put("answer",-1);}
             
             break;
+         // Vector<Integer> getUseridsFromEmailids(Vector<String> emailIds)
+         case "getUseridsFromEmailids":
+            // int[] userIds, int creatorUserId, String groupName
+            JSONArray uids = (JSONArray) obj.get("userIds");
+            // Vector<Integer> userIds = new Vector<Integer>();
+            Vector<String> emailIds = new Vector<String>();
+            for (int i=0; i<uids.size(); i++) {
+               emailIds.put(uids.get(i));
+            } 
+            try{
+               Vector<Integer> temp = picit.user.getUseridsFromEmailids(emailIds);
+               JSONArray ans1 = new JSONArray();
+               for(int i=0;i<temp.size(),i++){
+                  ans1.add(temp[i]);
+               }
+               ans.put("answer",ans1);
+            } catch (Exception e){e.printStackTrace();ans.put("answer",-1);}
+            break;
          case "createGroup":
             // int[] userIds, int creatorUserId, String groupName
             JSONArray uids = (JSONArray) obj.get("userIds");
-            int[] userIds = new int[uids.size()];
+            // int[] userIds = new int[uids.size()];
+            Vector<Integer> userIds = new Vector<Integer>();
             for (int i=0; i<uids.size(); i++) {
-               userIds[i] = (int)(long) uids.get(i);
+               userIds.put(uids.get(i));
             } 
             int creatorUserId = (int)(long) obj.get("creatorUserId");
             String groupName = (String) obj.get("groupName");
@@ -84,19 +103,19 @@ public class GreetingServer extends Thread {
          case "getGroupsOfUser":
             userId = (int)(long) obj.get("userId");
             try{
-               Vector<Integer> arr = picit.group.getGroupsOfUser(userId);
+               Vector<String> arr = picit.group.getGroupsOfUser(userId);
                JSONArray temp = new JSONArray();
                for (int i = 0; i < arr.size(); i++) {
-                  temp.add((long)(int) arr.get(i));
+                  temp.add((String)arr.get(i));
               }
                ans.put("answer",temp);
             } catch (Exception e){e.printStackTrace();JSONArray arr = new JSONArray();ans.put("answer",arr);}
             break;
          case "uploadPicture":
             userId = (int)(long) obj.get("userId");
-            String url = (String) obj.get("url");
+            // String url = (String) obj.get("url");
             try{
-               int temp = picit.picture.uploadPicture(userId, url);
+               int temp = picit.picture.uploadPicture(userId);
                ans.put("answer",temp);
             } catch (Exception e){e.printStackTrace();ans.put("answer",-1);}
             break;
@@ -104,9 +123,9 @@ public class GreetingServer extends Thread {
             int picId = (int)(long) obj.get("picId");
             userId = (int)(long) obj.get("userId");
             groupId = (int)(long) obj.get("groupId");
-            url = (String) obj.get("url");
+            // url = (String) obj.get("url");
             try{
-               boolean temp = picit.picture.sharePictureToGroup(picId,userId,groupId, url);
+               boolean temp = picit.picture.sharePictureToGroup(picId,userId,groupId);
                ans.put("answer",temp);
             } catch (Exception e){e.printStackTrace();ans.put("answer",false);}
             break;
@@ -121,20 +140,20 @@ public class GreetingServer extends Thread {
                ans.put("answer",temp);
             } catch (Exception e){e.printStackTrace();JSONArray arr = new JSONArray();ans.put("answer",arr);}
             break;
-         case "createAlbum":
+         case "createAlbumServer":
             userId = (int)(long) obj.get("userId");
             String albumName = (String) obj.get("albumName");
             try{
-               int temp = picit.album.createAlbum(albumName,userId);
+               int temp = picit.album.createAlbumServer(albumName,userId);
                ans.put("answer",temp);
             } catch (Exception e){e.printStackTrace();ans.put("answer",-1);}
             break;
          case "addPicturesToAlbum":
             int albumId = (int)(long) obj.get("albumId");
             uids = (JSONArray) obj.get("picIds");
-            int[] picIds = new int[uids.size()];
+            Vector<Integer> picIds = new Vector<Integer>();
             for (int i=0; i<uids.size(); i++) {
-               picIds[i] = (int)(long) uids.get(i);
+               picIds.put((int)(long) uids.get(i));
             }
             try{
                boolean temp = picit.album.addPicturesToAlbum(picIds,albumId);

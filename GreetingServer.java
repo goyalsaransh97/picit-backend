@@ -1,11 +1,12 @@
-//compile::::  javac -cp json-simple-1.1.1.jar:mysql-connector-java.jar PicitMain.java GreetingServer.java ScriptPython.java 
+//compile::::	javac -cp json-simple-1.1.1.jar:mysql-connector-java.jar PicitMain.java GreetingServer.java ScriptPython.java
+//run::::	java -cp .:json-simple-1.1.1.jar:mysql-connector-java.jar GreetingServer
 import java.io.*;
 import org.json.simple.*;
 import org.json.simple.parser.*; 
 import java.util.*;
 import java.sql.*;  
 import java.nio.charset.*; 
-// import org.json.JSONArray;
+import java.net.*;
 
 public class GreetingServer extends Thread {
    private ServerSocket serverSocket;

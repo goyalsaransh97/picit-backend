@@ -1,7 +1,7 @@
 # picit-backend
 ### picit is a live photo sharing app
 ---
-[![N|Solid](https://drive.google.com/file/d/1rsfK1Gumt0oa-wey5j-75_8SSY3seTDL/view?usp=sharing)]
+![N|Solid](https://i.ibb.co/1bwzmj2/58375072-570821983408788-4914677651714605056-n.png)
 
 * **Server** 
 

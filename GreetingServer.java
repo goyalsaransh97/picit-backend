@@ -32,17 +32,17 @@ public class GreetingServer extends Thread {
          // Vector<Integer> getUseridsFromEmailids(Vector<String> emailIds)
          case "getUseridsFromEmailids":
             // int[] userIds, int creatorUserId, String groupName
-            JSONArray uids = (JSONArray) obj.get("userIds");
+            JSONArray emailIdss = (JSONArray) obj.get("emailIds");
             // Vector<Integer> userIds = new Vector<Integer>();
             Vector<String> emailIds = new Vector<String>();
-            for (int i=0; i<uids.size(); i++) {
-               emailIds.put(uids.get(i));
+            for (int i=0; i<emailIdss.size(); i++) {
+               emailIds.add((String)emailIdss.get(i));
             } 
             try{
                Vector<Integer> temp = picit.user.getUseridsFromEmailids(emailIds);
                JSONArray ans1 = new JSONArray();
-               for(int i=0;i<temp.size(),i++){
-                  ans1.add(temp[i]);
+               for(int i=0;i<temp.size();i++){
+                  ans1.add(temp.get(i));
                }
                ans.put("answer",ans1);
             } catch (Exception e){e.printStackTrace();ans.put("answer",-1);}
@@ -53,7 +53,7 @@ public class GreetingServer extends Thread {
             // int[] userIds = new int[uids.size()];
             Vector<Integer> userIds = new Vector<Integer>();
             for (int i=0; i<uids.size(); i++) {
-               userIds.put(uids.get(i));
+               userIds.add((int)(long)uids.get(i));
             } 
             int creatorUserId = (int)(long) obj.get("creatorUserId");
             String groupName = (String) obj.get("groupName");
@@ -153,7 +153,7 @@ public class GreetingServer extends Thread {
             uids = (JSONArray) obj.get("picIds");
             Vector<Integer> picIds = new Vector<Integer>();
             for (int i=0; i<uids.size(); i++) {
-               picIds.put((int)(long) uids.get(i));
+               picIds.add((int)(long) uids.get(i));
             }
             try{
                boolean temp = picit.album.addPicturesToAlbum(picIds,albumId);
@@ -182,7 +182,7 @@ public class GreetingServer extends Thread {
          case "getPicturesInAlbum":
             albumId = (int)(long) obj.get("albumId");
             try{
-               Vector<String> arr = picit.album.getPicturesInAlbum(albumId);
+               Vector<Integer> arr = picit.album.getPicturesInAlbum(albumId);
                JSONArray temp = new JSONArray();
                for (int i = 0; i < arr.size(); i++) {
                   temp.add(arr.get(i));
@@ -198,10 +198,10 @@ public class GreetingServer extends Thread {
       return ans;
    }
 
-   public void run() {
-            String url="jdbc:mysql://picit.cdefe3kkdqar.ap-south-1.rds.amazonaws.com:3306/picit";
-      String userName="admin";
-      String password="qwerty1234";
+	public void run() {
+		String url="jdbc:mysql://picit.cdefe3kkdqar.ap-south-1.rds.amazonaws.com:3306/picit";
+		String userName="admin";
+		String password="qwerty1234";
 
       picit = new Picit();
       
@@ -280,10 +280,10 @@ public class GreetingServer extends Thread {
       }
    }
    
-   int createUser(String emailId, String userName){
-      System.out.println("");
-      return 1997;
-   }
+   // int createUser(String emailId, String userName){
+   //    System.out.println("");
+   //    return 1997;
+   // }
    int createGroup(int[] userIds, int creatorUserId, String groupName){
       return 1998;
    }

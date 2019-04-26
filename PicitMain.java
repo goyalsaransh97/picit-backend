@@ -271,53 +271,53 @@ class Picit{
 }
 
 class PicitMain{
-	public static void main(String args[]){  
-		String url="jdbc:mysql://localhost:3306/picit";		//3306 is the default port
-		String userName="prakhar10_10";
-		String password="lmaolmao";
-		// String url="jdbc:mysql://picit.cdefe3kkdqar.ap-south-1.rds.amazonaws.com:3306/picit";
-		// String userName="admin";
-		// String password="qwerty1234";
+	// public static void main(String args[]){  
+	// 	String url="jdbc:mysql://localhost:3306/picit";		//3306 is the default port
+	// 	String userName="prakhar10_10";
+	// 	String password="lmaolmao";
+	// 	// String url="jdbc:mysql://picit.cdefe3kkdqar.ap-south-1.rds.amazonaws.com:3306/picit";
+	// 	// String userName="admin";
+	// 	// String password="qwerty1234";
 
-		Picit picit = new Picit();
-		TestPicit testPicit = new TestPicit(picit.user, picit.group, picit.picture, picit.album, picit);
+	// 	Picit picit = new Picit();
+	// 	TestPicit testPicit = new TestPicit(picit.user, picit.group, picit.picture, picit.album, picit);
 
-		try{  
-			Class.forName("com.mysql.jdbc.Driver");  
-			picit.con = DriverManager.getConnection(url, userName, password);  
+	// 	try{  
+	// 		Class.forName("com.mysql.jdbc.Driver");  
+	// 		picit.con = DriverManager.getConnection(url, userName, password);  
 
-			/*don't do this in reality!!*/
-			testPicit.deleteAllData();		
+	// 		/*don't do this in reality!!*/
+	// 		testPicit.deleteAllData();		
 
-			Statement stmt = picit.con.createStatement();  
-			ResultSet rs;
+	// 		Statement stmt = picit.con.createStatement();  
+	// 		ResultSet rs;
 
-			rs = stmt.executeQuery("select max(userId) from Users");
-			rs.next(); 
-			picit.userIdMax = rs.getInt(1) + 1;//0 if no users 
+	// 		rs = stmt.executeQuery("select max(userId) from Users");
+	// 		rs.next(); 
+	// 		picit.userIdMax = rs.getInt(1) + 1;//0 if no users 
 
-			rs = stmt.executeQuery("select max(groupId) from Groups");  
-			rs.next(); 
-			picit.groupIdMax = rs.getInt(1) + 1;
+	// 		rs = stmt.executeQuery("select max(groupId) from Groups");  
+	// 		rs.next(); 
+	// 		picit.groupIdMax = rs.getInt(1) + 1;
 
-			rs = stmt.executeQuery("select max(picId) from Pictures");  
-			rs.next(); 
-			picit.picIdMax = rs.getInt(1) + 1;
+	// 		rs = stmt.executeQuery("select max(picId) from Pictures");  
+	// 		rs.next(); 
+	// 		picit.picIdMax = rs.getInt(1) + 1;
 
-			rs = stmt.executeQuery("select max(albumId) from Albums");  
-			rs.next(); 
-			picit.albumIdMax = rs.getInt(1) + 1;
+	// 		rs = stmt.executeQuery("select max(albumId) from Albums");  
+	// 		rs.next(); 
+	// 		picit.albumIdMax = rs.getInt(1) + 1;
 
-			System.out.println(picit.userIdMax+", "+picit.groupIdMax+", "+picit.picIdMax+", "+picit.albumIdMax);
+	// 		System.out.println(picit.userIdMax+", "+picit.groupIdMax+", "+picit.picIdMax+", "+picit.albumIdMax);
 
 
-			testPicit.testPicit();
+	// 		testPicit.testPicit();
 			
-			picit.con.close();  
-		}catch(Exception e){
-		 System.out.println(e);
-		}  
-	}
+	// 		picit.con.close();  
+	// 	}catch(Exception e){
+	// 	 System.out.println(e);
+	// 	}  
+	// }
 }
 
 class User{

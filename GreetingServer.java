@@ -1,5 +1,4 @@
-//javac -cp json-simple-1.1.1.jar:mysql-connector-java.jar PicitMain.java GreetingServer.java
-import java.net.*;
+//compile::::  javac -cp json-simple-1.1.1.jar:mysql-connector-java.jar PicitMain.java GreetingServer.java ScriptPython.java 
 import java.io.*;
 import org.json.simple.*;
 import org.json.simple.parser.*; 
@@ -20,6 +19,30 @@ public class GreetingServer extends Thread {
       String function = (String) obj.get("Function");
       JSONObject ans = new JSONObject();
       switch (function) {
+         case "applyFilter":
+            String filterCode = (String)obj.get("filterCode");
+            String strImage = (String)obj.get("image");
+            try{
+               // int temp = picit.user.createUser(emailId, userName);
+               byte[] imageByteArray = Base64.getDecoder().decode(strImage);
+               FileOutputStream imageOutFile = new FileOutputStream("temp.jpg");
+               imageOutFile.write(imageByteArray);
+               imageOutFile.close();
+
+               ScriptPython scriptPython = new ScriptPython();
+               scriptPython.runScript("temp.jpg",filterCode);
+
+               File file = new File("temp2.jpg");
+               FileInputStream imageInFile = new FileInputStream(file);
+               byte[] imageData = new byte[(int) file.length()];
+               imageInFile.read(imageData);
+               imageInFile.close();
+               String imageDataString = Base64.getEncoder().encodeToString(imageData);
+               System.out.println(imageDataString);
+               ans.put("answer",imageDataString);
+            } catch (Exception e){e.printStackTrace();ans.put("answer",-1);}
+            
+            break;
          case "createUser":
             String emailId = (String) obj.get("emailId");
             String userName =(String) obj.get("userName");
@@ -199,16 +222,19 @@ public class GreetingServer extends Thread {
       return ans;
    }
 
-	public void run() {
-		String url="jdbc:mysql://picit.cprurvpwu10u.us-east-1.rds.amazonaws.com:3306/picit";
-		String userName="admin";
-		String password="qwerty1234";
+   public void run() {
+      // String url="jdbc:mysql://picit.cprurvpwu10u.us-east-1.rds.amazonaws.com:3306/picit";
+      String url="jdbc:mysql://picit.cprurvpwu10u.us-east-1.rds.amazonaws.com:3306/picit";
+      String userName="admin";
+      String password="qwerty1234";
 
       picit = new Picit();
       
       try{  
          Class.forName("com.mysql.jdbc.Driver");  
+         System.out.println("hello");
          picit.con = DriverManager.getConnection(url, userName, password);  
+         System.out.println("hello2");
 
 
          Statement stmt = picit.con.createStatement();  
@@ -242,8 +268,16 @@ public class GreetingServer extends Thread {
             Socket server = serverSocket.accept();
             
             System.out.println("Just connected to " + server.getRemoteSocketAddress());
-            DataInputStream in = new DataInputStream(server.getInputStream());
-            String get_req = in.readUTF();
+            
+            // DataInputStream in = new DataInputStream(server.getInputStream());
+            // String get_req = in.readUTF();
+            // InputStream inputStream = socket.getInputStream();
+            // String get_req;
+            // inputStream.read(get_req);
+            ObjectInputStream   ois = new ObjectInputStream(server.getInputStream());
+            
+            String get_req=(String)ois.readObject();
+            // ois.close();
             System.out.println(get_req);
             // Object temp = JSONParser().parse(get_req);
             // JSONObject jobj = (JSONObject) temp;
@@ -252,8 +286,14 @@ public class GreetingServer extends Thread {
             JSONObject ans = process(jobj);
             // JSONObject jobj = new JSONObject(get_req);
             System.out.println((String) jobj.get("Function"));
-            DataOutputStream out = new DataOutputStream(server.getOutputStream());
-            out.writeUTF(ans.toString());
+            
+            // DataOutputStream out = new DataOutputStream(server.getOutputStream());
+            // out.writeUTF(ans.toString());
+            ObjectOutputStream  oos = new ObjectOutputStream(server.getOutputStream());
+            oos.flush();
+            oos.writeObject(ans.toString());
+            oos.flush();
+            // oos.close();
             server.close();
             
          } catch (SocketTimeoutException s) {

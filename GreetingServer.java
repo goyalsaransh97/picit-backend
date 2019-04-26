@@ -1,3 +1,4 @@
+//javac -cp json-simple-1.1.1.jar:mysql-connector-java.jar PicitMain.java GreetingServer.java
 import java.net.*;
 import java.io.*;
 import org.json.simple.*;
@@ -199,7 +200,7 @@ public class GreetingServer extends Thread {
    }
 
 	public void run() {
-		String url="jdbc:mysql://picit.cdefe3kkdqar.ap-south-1.rds.amazonaws.com:3306/picit";
+		String url="jdbc:mysql://picit.cprurvpwu10u.us-east-1.rds.amazonaws.com:3306/picit";
 		String userName="admin";
 		String password="qwerty1234";
 

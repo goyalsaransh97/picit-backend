@@ -56,7 +56,7 @@ class TestPicit{
 
 	void testPicit(){
 		deleteAllData();
-		int numberOfUsers = 10;
+		int numberOfUsers = 6;
 		testCreateUser(numberOfUsers);
 		int numberOfGroups = 2;
 		testCreateGroup(numberOfUsers, numberOfGroups);
@@ -121,24 +121,20 @@ class TestPicit{
 
 		for(int i=0;i<numberOfGroups;++i){	
 			try{ 
-				Vector<Integer> v = new Vector<Integer>(); 
+				Vector<Integer> userIds = new Vector<Integer>(); 
 				for(int j=1;j<=numberOfUsers;++j){
 					int n = rand.nextInt(2);
 					if(n==1){
-						v.add(j);
+						userIds.add(j);
 					}	
 				}
-				int users = v.size();
-				int[] userIds = new int[users];
-				for(int j=0;j<users;++j){
-					userIds[j] = (int)v.get(j);
-					// System.out.println(userIds[j]);
-				}
-
-				Integer creatorUserId = ((int)v.get(rand.nextInt(v.size())));
+				int users = userIds.size();
+				Integer creatorUserId = ((int)userIds.get(rand.nextInt(userIds.size())));
 
 				String groupName = RandomString.getAlphaNumericString(20);	
-				int groupId = group.createGroup(v, creatorUserId, groupName);
+				int groupId = group.createGroup(userIds, creatorUserId, groupName);
+				group.getUsersInGroup(groupId);
+
 				for(int userId : userIds){
 					group.setGroupInactive(userId,groupId);	
 					group.setGroupActive(userId,groupId);
@@ -286,7 +282,7 @@ class PicitMain{
 	// 		Class.forName("com.mysql.jdbc.Driver");  
 	// 		picit.con = DriverManager.getConnection(url, userName, password);  
 
-	// 		/*don't do this in reality!!*/
+
 	// 		testPicit.deleteAllData();		
 
 	// 		Statement stmt = picit.con.createStatement();  
@@ -411,6 +407,25 @@ class Group{
 		}
 		return groups;
 	}
+
+	//returns array of "userId,userName"
+	Vector<String> getUsersInGroup(int groupId) throws SQLException {
+		Vector<String> groups = new Vector<String>();
+		Statement statement = picit.con.createStatement();  
+		ResultSet rs = statement.executeQuery("select userId from UserInGroups where (groupId='"+groupId+"');");			
+
+		while(rs.next()){
+			int userId = rs.getInt(1);
+
+			Statement statement2 = picit.con.createStatement();  
+			ResultSet rs2 = statement2.executeQuery("select userName from Users where (userId='"+userId+"');");			
+			rs2.next();
+			String userName = rs2.getString(1);
+			groups.add(userId+","+userName);
+		}
+		return groups;
+	}
+	
 }
 
 class Picture{

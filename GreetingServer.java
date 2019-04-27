@@ -41,6 +41,7 @@ public class GreetingServer extends Thread {
                String imageDataString = Base64.getEncoder().encodeToString(imageData);
                System.out.println(imageDataString);
                ans.put("answer",imageDataString);
+               file.delete();
             } catch (Exception e){e.printStackTrace();ans.put("answer",-1);}
             
             break;
@@ -129,6 +130,17 @@ public class GreetingServer extends Thread {
             userId = (int)(long) obj.get("userId");
             try{
                Vector<String> arr = picit.group.getGroupsOfUser(userId);
+               JSONArray temp = new JSONArray();
+               for (int i = 0; i < arr.size(); i++) {
+                  temp.add((String)arr.get(i));
+              }
+               ans.put("answer",temp);
+            } catch (Exception e){e.printStackTrace();JSONArray arr = new JSONArray();ans.put("answer",arr);}
+            break;
+         case "getUsersInGroup":
+            groupId =(int)(long) obj.get("groupId");
+            try{
+               Vector<String> arr = picit.group.getUsersInGroup(groupId);
                JSONArray temp = new JSONArray();
                for (int i = 0; i < arr.size(); i++) {
                   temp.add((String)arr.get(i));
@@ -229,13 +241,13 @@ public class GreetingServer extends Thread {
       String userName="admin";
       String password="qwerty1234";
 
-      picit = new Picit();
-      
+		picit = new Picit();
+		
       try{  
          Class.forName("com.mysql.jdbc.Driver");  
-         System.out.println("hello");
+         System.out.println("Connecting to aws rds mysql "+url);
          picit.con = DriverManager.getConnection(url, userName, password);  
-         System.out.println("hello2");
+         System.out.println("successfully connected to aws rds mysql "+url);
 
 
          Statement stmt = picit.con.createStatement();  
@@ -286,13 +298,16 @@ public class GreetingServer extends Thread {
             JSONObject jobj = (JSONObject) parser.parse(get_req);
             JSONObject ans = process(jobj);
             // JSONObject jobj = new JSONObject(get_req);
-            System.out.println((String) jobj.get("Function"));
+            System.out.println("request_received= " + jobj.toString());
+            System.out.println("Function= " + (String) jobj.get("Function"));
             
             // DataOutputStream out = new DataOutputStream(server.getOutputStream());
             // out.writeUTF(ans.toString());
             ObjectOutputStream  oos = new ObjectOutputStream(server.getOutputStream());
             oos.flush();
-            oos.writeObject(ans.toString());
+            String ansString = ans.toString();
+            oos.writeObject(ansString);
+            System.out.println("ans= " + ansString);
             oos.flush();
             // oos.close();
             server.close();
@@ -326,18 +341,18 @@ public class GreetingServer extends Thread {
    //    System.out.println("");
    //    return 1997;
    // }
-   int createGroup(int[] userIds, int creatorUserId, String groupName){
-      return 1998;
-   }
-   boolean addUserToGroup(int userId, int groupId, boolean isActive){
-      return true;
-   }
-   boolean removeUserFromGroup(int userId, int groupId){
-      return true;
-   }
-   Vector<Integer> getGroupsOfUser(int userId){
-      Vector<Integer> v = new Vector<Integer>();
-      return v;
-   }
+   // int createGroup(int[] userIds, int creatorUserId, String groupName){
+   //    return 1998;
+   // }
+   // boolean addUserToGroup(int userId, int groupId, boolean isActive){
+   //    return true;
+   // }
+   // boolean removeUserFromGroup(int userId, int groupId){
+   //    return true;
+   // }
+   // Vector<Integer> getGroupsOfUser(int userId){
+   //    Vector<Integer> v = new Vector<Integer>();
+   //    return v;
+   // }
 }
 

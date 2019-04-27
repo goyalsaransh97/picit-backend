@@ -287,7 +287,8 @@ public class GreetingServer extends Thread {
             JSONObject jobj = (JSONObject) parser.parse(get_req);
             JSONObject ans = process(jobj);
             // JSONObject jobj = new JSONObject(get_req);
-            System.out.println("request_received= "+(String) jobj.get("Function"));
+            System.out.println("request_received= " + jobj.toString());
+            System.out.println("Function= " + (String) jobj.get("Function"));
             
             // DataOutputStream out = new DataOutputStream(server.getOutputStream());
             // out.writeUTF(ans.toString());
@@ -295,7 +296,7 @@ public class GreetingServer extends Thread {
             oos.flush();
             String ansString = ans.toString();
             oos.writeObject(ansString);
-            System.out.println("ans= "+ansString);
+            System.out.println("ans= " + ansString);
             oos.flush();
             // oos.close();
             server.close();

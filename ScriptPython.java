@@ -10,6 +10,7 @@ public class ScriptPython {
          try{
                process = Runtime.getRuntime().exec("python3 part3.py "+image_path+" "+filtercode);
                mProcess = process;
+               process.waitFor();
          }catch(Exception e) {
             System.out.println("Exception Raised" + e.toString());
          }

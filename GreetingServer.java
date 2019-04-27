@@ -137,6 +137,17 @@ public class GreetingServer extends Thread {
                ans.put("answer",temp);
             } catch (Exception e){e.printStackTrace();JSONArray arr = new JSONArray();ans.put("answer",arr);}
             break;
+         case "getUsersInGroup":
+            groupId =(int)(long) obj.get("groupId");
+            try{
+               Vector<String> arr = picit.group.getUsersInGroup(groupId);
+               JSONArray temp = new JSONArray();
+               for (int i = 0; i < arr.size(); i++) {
+                  temp.add((String)arr.get(i));
+              }
+               ans.put("answer",temp);
+            } catch (Exception e){e.printStackTrace();JSONArray arr = new JSONArray();ans.put("answer",arr);}
+            break;
          case "uploadPicture":
             userId = (int)(long) obj.get("userId");
             // String url = (String) obj.get("url");
@@ -230,8 +241,8 @@ public class GreetingServer extends Thread {
       String userName="admin";
       String password="qwerty1234";
 
-      picit = new Picit();
-      
+		picit = new Picit();
+		
       try{  
          Class.forName("com.mysql.jdbc.Driver");  
          System.out.println("Connecting to aws rds mysql "+url);
@@ -330,18 +341,18 @@ public class GreetingServer extends Thread {
    //    System.out.println("");
    //    return 1997;
    // }
-   int createGroup(int[] userIds, int creatorUserId, String groupName){
-      return 1998;
-   }
-   boolean addUserToGroup(int userId, int groupId, boolean isActive){
-      return true;
-   }
-   boolean removeUserFromGroup(int userId, int groupId){
-      return true;
-   }
-   Vector<Integer> getGroupsOfUser(int userId){
-      Vector<Integer> v = new Vector<Integer>();
-      return v;
-   }
+   // int createGroup(int[] userIds, int creatorUserId, String groupName){
+   //    return 1998;
+   // }
+   // boolean addUserToGroup(int userId, int groupId, boolean isActive){
+   //    return true;
+   // }
+   // boolean removeUserFromGroup(int userId, int groupId){
+   //    return true;
+   // }
+   // Vector<Integer> getGroupsOfUser(int userId){
+   //    Vector<Integer> v = new Vector<Integer>();
+   //    return v;
+   // }
 }
 

@@ -41,6 +41,7 @@ public class GreetingServer extends Thread {
                String imageDataString = Base64.getEncoder().encodeToString(imageData);
                System.out.println(imageDataString);
                ans.put("answer",imageDataString);
+               file.delete();
             } catch (Exception e){e.printStackTrace();ans.put("answer",-1);}
             
             break;
@@ -233,9 +234,9 @@ public class GreetingServer extends Thread {
       
       try{  
          Class.forName("com.mysql.jdbc.Driver");  
-         System.out.println("hello");
+         System.out.println("Connecting to aws rds mysql "+url);
          picit.con = DriverManager.getConnection(url, userName, password);  
-         System.out.println("hello2");
+         System.out.println("successfully connected to aws rds mysql "+url);
 
 
          Statement stmt = picit.con.createStatement();  

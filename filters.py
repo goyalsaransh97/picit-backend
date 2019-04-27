@@ -181,13 +181,33 @@ if __name__ == '__main__':
 	out = img.copy()
 	if filtercode=="moustache":
 		out = moustache(img)
-	if filtercode=="eye_mask":
+	elif filtercode=="eye_mask":
 		out = eye_mask(img)
-	if filtercode=="jaws":
+	elif filtercode=="jaws":
 		out = jaws(img)
-	# cv2.imshow('img', out)
-	# cv2.waitKey(0)
-	# cv2.destroyAllWindows()
+	elif filtercode=="grayscale":
+		out = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)	
+	elif filtercode=="blue":
+		out = np.zeros(img.shape,dtype = 'uint8')
+		for i in range(img.shape[0]):
+			for j in range(img.shape[1]):
+				out[i,j] = img[i,j]
+				out[i,j,0] = min(img[i,j,0] + 30,255)
+	elif filtercode=="red":
+		out = np.zeros(img.shape,dtype = 'uint8')
+		for i in range(img.shape[0]):
+			for j in range(img.shape[1]):
+				out[i,j] = img[i,j]
+				out[i,j,2] = min(img[i,j,2] + 50,255)
+	elif filtercode=="negative":
+		out = 255 - img			
+	else:
+		out = img
+		
+		
+	cv2.imshow('img', out)
+	cv2.waitKey(0)
+	cv2.destroyAllWindows()
 	cv2.imwrite('temp2.jpg',out)			
 # fileName = 'images/hillary_clinton.jpg'
 # img = cv2.imread(fileName)

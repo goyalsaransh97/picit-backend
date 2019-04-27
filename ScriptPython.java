@@ -8,7 +8,7 @@ public class ScriptPython {
   public void runScript(String image_path,String filtercode){
          Process process;
          try{
-               process = Runtime.getRuntime().exec("python3 part3.py "+image_path+" "+filtercode);
+               process = Runtime.getRuntime().exec("python3 filters.py "+image_path+" "+filtercode);
                mProcess = process;
          }catch(Exception e) {
             System.out.println("Exception Raised" + e.toString());

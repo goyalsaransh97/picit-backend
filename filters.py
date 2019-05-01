@@ -205,9 +205,9 @@ if __name__ == '__main__':
 		out = img
 		
 		
-	cv2.imshow('img', out)
-	cv2.waitKey(0)
-	cv2.destroyAllWindows()
+	# cv2.imshow('img', out)
+	# cv2.waitKey(0)
+	# cv2.destroyAllWindows()
 	cv2.imwrite('temp2.jpg',out)			
 # fileName = 'images/hillary_clinton.jpg'
 # img = cv2.imread(fileName)

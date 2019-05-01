@@ -408,7 +408,7 @@ class Group{
 		return groups;
 	}
 
-	//returns array of "userId,userName"
+	//returns array of "userId,userName,emailId"
 	Vector<String> getUsersInGroup(int groupId) throws SQLException {
 		Vector<String> groups = new Vector<String>();
 		Statement statement = picit.con.createStatement();  
@@ -418,10 +418,11 @@ class Group{
 			int userId = rs.getInt(1);
 
 			Statement statement2 = picit.con.createStatement();  
-			ResultSet rs2 = statement2.executeQuery("select userName from Users where (userId='"+userId+"');");			
+			ResultSet rs2 = statement2.executeQuery("select userName,emailId from Users where (userId='"+userId+"');");			
 			rs2.next();
 			String userName = rs2.getString(1);
-			groups.add(userId+","+userName);
+			String emailId = rs2.getString(2);
+			groups.add(userId+","+userName+","+emailId);
 		}
 		return groups;
 	}

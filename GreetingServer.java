@@ -38,7 +38,7 @@ public class GreetingServer extends Thread {
                byte[] imageData = new byte[(int) file.length()];
                imageInFile.read(imageData);
                imageInFile.close();
-               String imageDataString = new String(imageData);
+               String imageDataString = Base64.getEncoder().encodeToString(imageData);
                System.out.println(imageDataString);
                ans.put("answer",imageDataString);
                file.delete();

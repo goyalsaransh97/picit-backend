@@ -185,8 +185,15 @@ public class GreetingServer extends Thread {
                ans.put("answer",temp);
             } catch (Exception e){e.printStackTrace();ans.put("answer",-1);}
             break;
-         case "addPicturesToAlbum":
+		case "getAlbumNameFromAlbumId":
             int albumId = (int)(long) obj.get("albumId");
+            try{
+               String temp = picit.album.getAlbumNameFromAlbumId(albumId);
+               ans.put("answer",temp);
+            } catch (Exception e){e.printStackTrace();ans.put("answer",-1);}
+            break;
+         case "addPicturesToAlbum":
+            albumId = (int)(long) obj.get("albumId");
             uids = (JSONArray) obj.get("picIds");
             Vector<Integer> picIds = new Vector<Integer>();
             for (int i=0; i<uids.size(); i++) {

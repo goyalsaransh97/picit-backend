@@ -855,6 +855,55 @@ public class GreetingClient {
       return 0;
    }
 
+   public static String getAlbumNameFromAlbumId(int albumId) {
+
+      try {
+         System.out.println("Connecting to " + serverName + " on port " + port);
+         Socket client = new Socket(serverName, port);
+         
+         System.out.println("Just connected to " + client.getRemoteSocketAddress());
+         
+
+         OutputStream outToServer = client.getOutputStream();
+         ObjectOutputStream out = new ObjectOutputStream(outToServer);
+         
+
+         JSONObject obj = new JSONObject();
+         obj.put("Function","createAlbumServer");
+         obj.put("albumId",albumId);
+         
+         String objstr = obj.toString();
+         System.out.println(objstr);
+         // JSONObject newobj = new JSONObject(objstr);
+
+         
+         JSONParser parser = new JSONParser();
+         JSONObject json = (JSONObject) parser.parse(objstr);
+         System.out.println(json.get("Function"));
+
+      
+         
+         out.writeObject(objstr);
+
+         System.out.println("sent to server, awaiting response");
+         InputStream inFromServer = client.getInputStream();
+         ObjectInputStream in = new ObjectInputStream(inFromServer);
+         System.out.println("done talking to server");
+         String objrecvd = (String)in.readObject();
+         System.out.println("Server says \n" + objrecvd);
+         JSONObject jsonrecvd = (JSONObject) parser.parse(objrecvd);
+         System.out.println(jsonrecvd.get("answer"));
+
+         String answer = (String)jsonrecvd.get("answer");
+
+         client.close();
+         return answer;
+      } catch (Exception e) {
+         e.printStackTrace();
+      }
+      return 0;
+   }
+
    public static boolean addPicturesToAlbum(Vector<Integer> picIds, int albumId)
    {
          try {

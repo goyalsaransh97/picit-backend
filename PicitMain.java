@@ -470,6 +470,15 @@ class Album{
 		this.picit = picit;
 	}
 
+	String getAlbumNameFromAlbumId(int albumId) throws SQLException {
+		Vector<Integer> pictures = new Vector<Integer>();
+		Statement statement = picit.con.createStatement();  
+		ResultSet rs = statement.executeQuery("select albumName from Albums where (albumId='"+albumId+"');");			
+		rs.next();
+		String albumName = rs.getString(1);
+		return albumName;
+	}
+
 	//return albumId
 	int createAlbumServer(String albumName, int userId) throws SQLException {
 		Statement statement = picit.con.createStatement();  

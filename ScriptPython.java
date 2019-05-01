@@ -13,6 +13,7 @@ public class ScriptPython {
                process.waitFor();
          }catch(Exception e) {
             System.out.println("Exception Raised" + e.toString());
+            System.out.println(e.printStackTrace());
          }
          InputStream stdout = mProcess.getInputStream();
          BufferedReader reader = new BufferedReader(new InputStreamReader(stdout,StandardCharsets.UTF_8));

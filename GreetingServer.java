@@ -39,7 +39,7 @@ public class GreetingServer extends Thread {
                imageInFile.read(imageData);
                imageInFile.close();
                String imageDataString = Base64.getEncoder().encodeToString(imageData);
-               System.out.println(imageDataString);
+               // System.out.println(imageDataString);
                ans.put("answer",imageDataString);
                file.delete();
             } catch (Exception e){e.printStackTrace();ans.put("answer",-1);}
@@ -298,14 +298,14 @@ public class GreetingServer extends Thread {
             
             String get_req=(String)ois.readObject();
             // ois.close();
-            System.out.println(get_req);
+            // System.out.println(get_req);
             // Object temp = JSONParser().parse(get_req);
             // JSONObject jobj = (JSONObject) temp;
             JSONParser parser = new JSONParser();
             JSONObject jobj = (JSONObject) parser.parse(get_req);
             JSONObject ans = process(jobj);
             // JSONObject jobj = new JSONObject(get_req);
-            System.out.println("request_received= " + jobj.toString());
+            // System.out.println("request_received= " + jobj.toString());
             System.out.println("Function= " + (String) jobj.get("Function"));
             
             // DataOutputStream out = new DataOutputStream(server.getOutputStream());

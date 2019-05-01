@@ -25,7 +25,7 @@ public class GreetingServer extends Thread {
             String strImage = (String)obj.get("image");
             try{
                // int temp = picit.user.createUser(emailId, userName);
-               byte[] imageByteArray = (strImage).getBytes("UTF-8");
+               byte[] imageByteArray = Base64.getDecoder().decode(strImage);
                FileOutputStream imageOutFile = new FileOutputStream("temp.jpg");
                imageOutFile.write(imageByteArray);
                imageOutFile.close();
@@ -38,7 +38,7 @@ public class GreetingServer extends Thread {
                byte[] imageData = new byte[(int) file.length()];
                imageInFile.read(imageData);
                imageInFile.close();
-               String imageDataString = new String(imageData, "UTF-8");
+               String imageDataString = Base64.getEncoder().encodeToString(imageData);
                // System.out.println(imageDataString);
                ans.put("answer",imageDataString);
                file.delete();

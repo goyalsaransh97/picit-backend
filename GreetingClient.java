@@ -24,7 +24,7 @@ public class GreetingClient {
 
       // byte[] ret_imageData = applyFilter(imageData,"moustache");
       
-      // System.out.println(ret_imageData);
+      
       // FileOutputStream imageOutFile = new FileOutputStream("images/test.jpg");
       //  imageOutFile.write(ret_imageData);
       //  imageOutFile.close();
@@ -58,7 +58,7 @@ public class GreetingClient {
       // boolean bool3 = setGroupActive(user1,groupid1);
       // boolean bool4 = setGroupInactive(user2,groupid1);
       // Vector<String> vecOfGroupsOfUser = getGroupsOfUser(user2);
-      // // System.out.println(vec.toString());
+      
       // int picid1 = uploadPicture(user1);
       // int picid2 = uploadPicture(user2);
       // Vector<Integer> vecOfPicId = new Vector<Integer>();
@@ -79,66 +79,24 @@ public class GreetingClient {
    public static byte[] applyFilter(byte[] imageByteArray, String filterCode) {
 
       try {
-         System.out.println("Connecting to " + serverName + " on port " + port);
          Socket client = new Socket(serverName, port);
-         
-         System.out.println("Just connected to " + client.getRemoteSocketAddress());
-         
-         // ObjectInputStream ois = new ObjectInputStream(client.getInputStream());
-         
          ObjectOutputStream oos = new ObjectOutputStream(client.getOutputStream());
          oos.flush();
-         System.out.println("Done making ois and oos");
-         // OutputStream outToServer = client.getOutputStream();
-         // ObjectOutputStream out = new ObjectOutputStream(outToServer);
-         
-         // ByteArrayOutputStream baos = new ByteArrayOutputStream();
-         // ImageIO.write( image, "jpg", baos );
-         // baos.flush();
-         // byte[] imageInByte = baos.toByteArray();
-         // baos.close();
          String imageDataString = Base64.getEncoder().encodeToString(imageByteArray);
-         
          JSONObject obj = new JSONObject();
          obj.put("Function","applyFilter");
          obj.put("image",imageDataString);
          obj.put("filterCode",filterCode);
-         
-         
          String objstr = obj.toString();
-         System.out.println(objstr);
-         // JSONObject newobj = new JSONObject(objstr);
-
-         
          JSONParser parser = new JSONParser();
-         // JSONObject json = (JSONObject) parser.parse(objstr);
-         // System.out.println(json.get("Function"));
-
-         // String ret_imageDataString = (String)json.get("image");
-         // byte[] ret_imageByteArray = Base64.getDecoder().decode(ret_imageDataString);
-         // return ret_imageByteArray;
-         
-         // outputStream.write(objstr);
-         // outputStream.flush()
          oos.flush();
-         System.out.println("next line I write");
-        oos.writeObject(objstr);
-        
-        oos.flush();
-        // oos.reset();
-        // oos.close();
-         System.out.println("sent to server, awaiting response");
-         // InputStream inFromServer = client.getInputStream();
-         // ObjectInputStream in = new ObjectInputStream(inFromServer);
+         oos.writeObject(objstr);
+         oos.flush();
          
          ObjectInputStream ois = new ObjectInputStream(client.getInputStream());
 
-         System.out.println("done talking to server");
          String objrecvd = (String)ois.readObject();
-         // ois.close();
-         System.out.println("Server says \n" + objrecvd);
          JSONObject jsonrecvd = (JSONObject) parser.parse(objrecvd);
-         System.out.println(jsonrecvd.get("answer"));
          client.close();
          String answer = (String)jsonrecvd.get("answer");
          byte[] ret_imageByteArray = Base64.getDecoder().decode(answer);
@@ -154,12 +112,7 @@ public class GreetingClient {
    public static int createUser(String emailId, String userName) {
 
       try {
-         System.out.println("Connecting to " + serverName + " on port " + port);
          Socket client = new Socket(serverName, port);
-         
-         System.out.println("Just connected to " + client.getRemoteSocketAddress());
-         
-
          OutputStream outToServer = client.getOutputStream();
          ObjectOutputStream out = new ObjectOutputStream(outToServer);
          
@@ -170,27 +123,16 @@ public class GreetingClient {
          obj.put("userName",userName);
          
          String objstr = obj.toString();
-         System.out.println(objstr);
-         // JSONObject newobj = new JSONObject(objstr);
-
-         
          JSONParser parser = new JSONParser();
          JSONObject json = (JSONObject) parser.parse(objstr);
-         System.out.println(json.get("Function"));
-
-      
          
          out.writeObject(objstr);
 
-         System.out.println("sent to server, awaiting response");
          InputStream inFromServer = client.getInputStream();
          ObjectInputStream in = new ObjectInputStream(inFromServer);
-         System.out.println("done talking to server");
          String objrecvd = (String)in.readObject();
-         System.out.println("Server says \n" + objrecvd);
          JSONObject jsonrecvd = (JSONObject) parser.parse(objrecvd);
-         System.out.println(jsonrecvd.get("answer"));
-
+         
          int answer = (int)(long)jsonrecvd.get("answer");
 
          client.close();
@@ -203,16 +145,10 @@ public class GreetingClient {
    public static Vector<Integer> getUseridsFromEmailids(Vector<String> emailIds)
    {
          try {
-         System.out.println("Connecting to " + serverName + " on port " + port);
+         
          Socket client = new Socket(serverName, port);
-         
-         System.out.println("Just connected to " + client.getRemoteSocketAddress());
-         
-
          OutputStream outToServer = client.getOutputStream();
          ObjectOutputStream out = new ObjectOutputStream(outToServer);
-         
-
          JSONObject obj = new JSONObject();
          obj.put("Function","getUseridsFromEmailids");
          JSONArray jsArray = new JSONArray();
@@ -222,41 +158,21 @@ public class GreetingClient {
          obj.put("emailIds",jsArray);
          
          String objstr = obj.toString();
-         System.out.println(objstr);
-         // JSONObject newobj = new JSONObject(objstr);
-
-         
          JSONParser parser = new JSONParser();
          JSONObject json = (JSONObject) parser.parse(objstr);
-         // JSONArray jarray = (JSONArray)json.get("userIds");
-         // if(jarray!=null)System.out.println("yaaay, it is not null");
-         // else System.out.println("booo! it is null"); 
-         
-         // int n = jarray.size();
-         // System.out.println(n);
-
-         
-         // int[] usid = new int[n];
-         // for(int i=0;i<n;i++)
-         // {
-         //    usid[i] = (int)(long)jarray.get(i);
-         // }
-         // System.out.println(usid[2]);
-      
-         
          out.writeObject(objstr);
 
-         System.out.println("sent to server, awaiting response");
+         
          InputStream inFromServer = client.getInputStream();
          ObjectInputStream in = new ObjectInputStream(inFromServer);
-         System.out.println("done talking to server");
+         
          String objrecvd = (String)in.readObject();
-         System.out.println("Server says \n" + objrecvd);
+         
          JSONObject jsonrecvd = (JSONObject) parser.parse(objrecvd);
-         System.out.println(jsonrecvd.get("answer"));
+         
 
          JSONArray jarray = (JSONArray)jsonrecvd.get("answer");
-         if(jarray==null)System.out.println("its a null");
+         
          Vector<Integer> answer = new Vector<Integer>();
          for(int i=0;i<jarray.size();i++)
          {
@@ -275,10 +191,10 @@ public class GreetingClient {
 
    {
    		try {
-         System.out.println("Connecting to " + serverName + " on port " + port);
+         
          Socket client = new Socket(serverName, port);
          
-         System.out.println("Just connected to " + client.getRemoteSocketAddress());
+         
          
 
          OutputStream outToServer = client.getOutputStream();
@@ -296,38 +212,20 @@ public class GreetingClient {
          obj.put("groupName",groupName);
          
          String objstr = obj.toString();
-         System.out.println(objstr);
-         // JSONObject newobj = new JSONObject(objstr);
-
          
          JSONParser parser = new JSONParser();
          JSONObject json = (JSONObject) parser.parse(objstr);
          JSONArray jarray = (JSONArray)json.get("userIds");
-         // if(jarray!=null)System.out.println("yaaay, it is not null");
-         // else System.out.println("booo! it is null");	
-         
-         // int n = jarray.size();
-         // System.out.println(n);
-
-         
-         // int[] usid = new int[n];
-         // for(int i=0;i<n;i++)
-         // {
-         // 	usid[i] = (int)(long)jarray.get(i);
-         // }
-         // System.out.println(usid[2]);
-      
-         
          out.writeObject(objstr);
 
-         System.out.println("sent to server, awaiting response");
+         
          InputStream inFromServer = client.getInputStream();
          ObjectInputStream in = new ObjectInputStream(inFromServer);
-         System.out.println("done talking to server");
+         
          String objrecvd = (String)in.readObject();
-         System.out.println("Server says \n" + objrecvd);
+         
          JSONObject jsonrecvd = (JSONObject) parser.parse(objrecvd);
-         System.out.println(jsonrecvd.get("answer"));
+         
 
          int answer = (int)(long)jsonrecvd.get("answer");
          client.close();
@@ -341,10 +239,10 @@ public class GreetingClient {
    public static boolean addUserToGroup(int userId, int groupId, boolean isActive) {
 
       try {
-         System.out.println("Connecting to " + serverName + " on port " + port);
+         
          Socket client = new Socket(serverName, port);
          
-         System.out.println("Just connected to " + client.getRemoteSocketAddress());
+         
          
 
          OutputStream outToServer = client.getOutputStream();
@@ -358,26 +256,18 @@ public class GreetingClient {
          obj.put("isActive",isActive);
          
          String objstr = obj.toString();
-         System.out.println(objstr);
-         // JSONObject newobj = new JSONObject(objstr);
-
          
          JSONParser parser = new JSONParser();
          JSONObject json = (JSONObject) parser.parse(objstr);
-         System.out.println(json.get("Function"));
-
-      
-         
          out.writeObject(objstr);
 
-         System.out.println("sent to server, awaiting response");
          InputStream inFromServer = client.getInputStream();
          ObjectInputStream in = new ObjectInputStream(inFromServer);
-         System.out.println("done talking to server");
+         
          String objrecvd = (String)in.readObject();
-         System.out.println("Server says \n" + objrecvd);
+         
          JSONObject jsonrecvd = (JSONObject) parser.parse(objrecvd);
-         System.out.println(jsonrecvd.get("answer"));
+         
 
          boolean answer = (boolean)jsonrecvd.get("answer");
 
@@ -392,12 +282,8 @@ public class GreetingClient {
    public static boolean removeUserFromGroup(int userId, int groupId) {
 
       try {
-         System.out.println("Connecting to " + serverName + " on port " + port);
+         
          Socket client = new Socket(serverName, port);
-         
-         System.out.println("Just connected to " + client.getRemoteSocketAddress());
-         
-
          OutputStream outToServer = client.getOutputStream();
          ObjectOutputStream out = new ObjectOutputStream(outToServer);
          
@@ -408,26 +294,18 @@ public class GreetingClient {
          obj.put("groupId",groupId);
          
          String objstr = obj.toString();
-         System.out.println(objstr);
-         // JSONObject newobj = new JSONObject(objstr);
-
          
          JSONParser parser = new JSONParser();
          JSONObject json = (JSONObject) parser.parse(objstr);
-         System.out.println(json.get("Function"));
-
-      
-         
          out.writeObject(objstr);
 
-         System.out.println("sent to server, awaiting response");
          InputStream inFromServer = client.getInputStream();
          ObjectInputStream in = new ObjectInputStream(inFromServer);
-         System.out.println("done talking to server");
+         
          String objrecvd = (String)in.readObject();
-         System.out.println("Server says \n" + objrecvd);
+         
          JSONObject jsonrecvd = (JSONObject) parser.parse(objrecvd);
-         System.out.println(jsonrecvd.get("answer"));
+         
 
          boolean answer = (boolean)jsonrecvd.get("answer");
 
@@ -441,12 +319,9 @@ public class GreetingClient {
    public static boolean setGroupActive(int userId, int groupId) {
 
       try {
-         System.out.println("Connecting to " + serverName + " on port " + port);
+         
          Socket client = new Socket(serverName, port);
          
-         System.out.println("Just connected to " + client.getRemoteSocketAddress());
-         
-
          OutputStream outToServer = client.getOutputStream();
          ObjectOutputStream out = new ObjectOutputStream(outToServer);
          
@@ -457,26 +332,20 @@ public class GreetingClient {
          obj.put("groupId",groupId);
          
          String objstr = obj.toString();
-         System.out.println(objstr);
-         // JSONObject newobj = new JSONObject(objstr);
-
          
          JSONParser parser = new JSONParser();
          JSONObject json = (JSONObject) parser.parse(objstr);
-         System.out.println(json.get("Function"));
-
-      
          
          out.writeObject(objstr);
 
-         System.out.println("sent to server, awaiting response");
+         
          InputStream inFromServer = client.getInputStream();
          ObjectInputStream in = new ObjectInputStream(inFromServer);
-         System.out.println("done talking to server");
+         
          String objrecvd = (String)in.readObject();
-         System.out.println("Server says \n" + objrecvd);
+         
          JSONObject jsonrecvd = (JSONObject) parser.parse(objrecvd);
-         System.out.println(jsonrecvd.get("answer"));
+         
 
          boolean answer = (boolean)jsonrecvd.get("answer");
 
@@ -491,10 +360,10 @@ public class GreetingClient {
    public static boolean setGroupInactive(int userId, int groupId) {
 
       try {
-         System.out.println("Connecting to " + serverName + " on port " + port);
+         
          Socket client = new Socket(serverName, port);
          
-         System.out.println("Just connected to " + client.getRemoteSocketAddress());
+         
          
 
          OutputStream outToServer = client.getOutputStream();
@@ -507,26 +376,20 @@ public class GreetingClient {
          obj.put("groupId",groupId);
          
          String objstr = obj.toString();
-         System.out.println(objstr);
-         // JSONObject newobj = new JSONObject(objstr);
-
          
          JSONParser parser = new JSONParser();
          JSONObject json = (JSONObject) parser.parse(objstr);
-         System.out.println(json.get("Function"));
-
-      
          
          out.writeObject(objstr);
 
-         System.out.println("sent to server, awaiting response");
+         
          InputStream inFromServer = client.getInputStream();
          ObjectInputStream in = new ObjectInputStream(inFromServer);
-         System.out.println("done talking to server");
+         
          String objrecvd = (String)in.readObject();
-         System.out.println("Server says \n" + objrecvd);
+         
          JSONObject jsonrecvd = (JSONObject) parser.parse(objrecvd);
-         System.out.println(jsonrecvd.get("answer"));
+         
 
          boolean answer = (boolean)jsonrecvd.get("answer");
 
@@ -541,12 +404,9 @@ public class GreetingClient {
    public static Vector<String> getGroupsOfUser(int userId) {
 
       try {
-         System.out.println("Connecting to " + serverName + " on port " + port);
+         
          Socket client = new Socket(serverName, port);
          
-         System.out.println("Just connected to " + client.getRemoteSocketAddress());
-         
-
          OutputStream outToServer = client.getOutputStream();
          ObjectOutputStream out = new ObjectOutputStream(outToServer);
          
@@ -556,36 +416,27 @@ public class GreetingClient {
          obj.put("userId",userId);
          
          String objstr = obj.toString();
-         System.out.println(objstr);
-         // JSONObject newobj = new JSONObject(objstr);
-
          
          JSONParser parser = new JSONParser();
          JSONObject json = (JSONObject) parser.parse(objstr);
-         System.out.println(json.get("Function"));
-
-      
          
          out.writeObject(objstr);
 
-         System.out.println("sent to server, awaiting response");
+         
          InputStream inFromServer = client.getInputStream();
          ObjectInputStream in = new ObjectInputStream(inFromServer);
-         System.out.println("done talking to server");
+         
          String objrecvd = (String)in.readObject();
-         System.out.println("Server says \n" + objrecvd);
+         
          JSONObject jsonrecvd = (JSONObject) parser.parse(objrecvd);
-         System.out.println(jsonrecvd.get("answer"));
+         
          JSONArray jarray = (JSONArray)jsonrecvd.get("answer");
-         if(jarray==null)System.out.println("its a null");
+         
          Vector<String> answer = new Vector<String>();
          for(int i=0;i<jarray.size();i++)
          {
             answer.add((String)jarray.get(i));
          }
-
-         // boolean answer = (boolean)jsonrecvd.get("answer");
-
          client.close();
          return answer;
       } catch (Exception e) {
@@ -597,50 +448,35 @@ public class GreetingClient {
    public static Vector<String> getUsersInGroup(int groupId) {
 
       try {
-         System.out.println("Connecting to " + serverName + " on port " + port);
+         
          Socket client = new Socket(serverName, port);
-         
-         System.out.println("Just connected to " + client.getRemoteSocketAddress());
-         
-
          OutputStream outToServer = client.getOutputStream();
          ObjectOutputStream out = new ObjectOutputStream(outToServer);
-         
-
          JSONObject obj = new JSONObject();
          obj.put("Function","getUsersInGroup");
          obj.put("groupId",groupId);
          
          String objstr = obj.toString();
-         System.out.println(objstr);
-         // JSONObject newobj = new JSONObject(objstr);
-
          
          JSONParser parser = new JSONParser();
          JSONObject json = (JSONObject) parser.parse(objstr);
-         System.out.println(json.get("Function"));
-
-      
          
          out.writeObject(objstr);
 
-         System.out.println("sent to server, awaiting response");
          InputStream inFromServer = client.getInputStream();
          ObjectInputStream in = new ObjectInputStream(inFromServer);
-         System.out.println("done talking to server");
+         
          String objrecvd = (String)in.readObject();
-         System.out.println("Server says \n" + objrecvd);
+         
          JSONObject jsonrecvd = (JSONObject) parser.parse(objrecvd);
-         System.out.println(jsonrecvd.get("answer"));
+         
          JSONArray jarray = (JSONArray)jsonrecvd.get("answer");
-         if(jarray==null)System.out.println("its a null");
+         
          Vector<String> answer = new Vector<String>();
          for(int i=0;i<jarray.size();i++)
          {
             answer.add((String)jarray.get(i));
          }
-
-         // boolean answer = (boolean)jsonrecvd.get("answer");
 
          client.close();
          return answer;
@@ -653,12 +489,9 @@ public class GreetingClient {
    public static int uploadPicture(int userId) {
 
       try {
-         System.out.println("Connecting to " + serverName + " on port " + port);
+         
          Socket client = new Socket(serverName, port);
          
-         System.out.println("Just connected to " + client.getRemoteSocketAddress());
-         
-
          OutputStream outToServer = client.getOutputStream();
          ObjectOutputStream out = new ObjectOutputStream(outToServer);
          
@@ -668,26 +501,18 @@ public class GreetingClient {
          obj.put("userId",userId);
                   
          String objstr = obj.toString();
-         System.out.println(objstr);
-         // JSONObject newobj = new JSONObject(objstr);
-
          
          JSONParser parser = new JSONParser();
          JSONObject json = (JSONObject) parser.parse(objstr);
-         System.out.println(json.get("Function"));
-
-      
          
          out.writeObject(objstr);
 
-         System.out.println("sent to server, awaiting response");
          InputStream inFromServer = client.getInputStream();
          ObjectInputStream in = new ObjectInputStream(inFromServer);
-         System.out.println("done talking to server");
+         
          String objrecvd = (String)in.readObject();
-         System.out.println("Server says \n" + objrecvd);
+         
          JSONObject jsonrecvd = (JSONObject) parser.parse(objrecvd);
-         System.out.println(jsonrecvd.get("answer"));
 
          int answer = (int)(long)jsonrecvd.get("answer");
 
@@ -702,12 +527,9 @@ public class GreetingClient {
    public static boolean sharePictureToGroup(int picId, int userId, int groupId) {
 
       try {
-         System.out.println("Connecting to " + serverName + " on port " + port);
+         
          Socket client = new Socket(serverName, port);
          
-         System.out.println("Just connected to " + client.getRemoteSocketAddress());
-         
-
          OutputStream outToServer = client.getOutputStream();
          ObjectOutputStream out = new ObjectOutputStream(outToServer);
          
@@ -719,26 +541,21 @@ public class GreetingClient {
          obj.put("groupId",groupId);
          
          String objstr = obj.toString();
-         System.out.println(objstr);
-         // JSONObject newobj = new JSONObject(objstr);
-
+         
          
          JSONParser parser = new JSONParser();
          JSONObject json = (JSONObject) parser.parse(objstr);
-         System.out.println(json.get("Function"));
-
-      
          
          out.writeObject(objstr);
 
-         System.out.println("sent to server, awaiting response");
+         
          InputStream inFromServer = client.getInputStream();
          ObjectInputStream in = new ObjectInputStream(inFromServer);
-         System.out.println("done talking to server");
+         
          String objrecvd = (String)in.readObject();
-         System.out.println("Server says \n" + objrecvd);
+         
          JSONObject jsonrecvd = (JSONObject) parser.parse(objrecvd);
-         System.out.println(jsonrecvd.get("answer"));
+         
 
          boolean answer = (boolean)jsonrecvd.get("answer");
 
@@ -753,12 +570,9 @@ public class GreetingClient {
    public static Vector<String> getPicturesInGroup(int groupId) {
 
       try {
-         System.out.println("Connecting to " + serverName + " on port " + port);
+         
          Socket client = new Socket(serverName, port);
          
-         System.out.println("Just connected to " + client.getRemoteSocketAddress());
-         
-
          OutputStream outToServer = client.getOutputStream();
          ObjectOutputStream out = new ObjectOutputStream(outToServer);
          
@@ -768,34 +582,26 @@ public class GreetingClient {
          obj.put("groupId",groupId);
          
          String objstr = obj.toString();
-         System.out.println(objstr);
-         // JSONObject newobj = new JSONObject(objstr);
-
          
          JSONParser parser = new JSONParser();
          JSONObject json = (JSONObject) parser.parse(objstr);
-         System.out.println(json.get("Function"));
-
-      
          
          out.writeObject(objstr);
 
-         System.out.println("sent to server, awaiting response");
+         
          InputStream inFromServer = client.getInputStream();
          ObjectInputStream in = new ObjectInputStream(inFromServer);
-         System.out.println("done talking to server");
+         
          String objrecvd = (String)in.readObject();
-         System.out.println("Server says \n" + objrecvd);
+         
          JSONObject jsonrecvd = (JSONObject) parser.parse(objrecvd);
-         System.out.println(jsonrecvd.get("answer"));
+         
          JSONArray jarray = (JSONArray)jsonrecvd.get("answer");
          Vector<String> answer = new Vector<String>();
          for(int i=0;i<jarray.size();i++)
          {
             answer.add((String)jarray.get(i));
          }
-
-         // boolean answer = (boolean)jsonrecvd.get("answer");
 
          client.close();
          return answer;
@@ -808,12 +614,9 @@ public class GreetingClient {
    public static int createAlbumServer(String albumName, int userId) {
 
       try {
-         System.out.println("Connecting to " + serverName + " on port " + port);
+         
          Socket client = new Socket(serverName, port);
          
-         System.out.println("Just connected to " + client.getRemoteSocketAddress());
-         
-
          OutputStream outToServer = client.getOutputStream();
          ObjectOutputStream out = new ObjectOutputStream(outToServer);
          
@@ -824,26 +627,19 @@ public class GreetingClient {
          obj.put("userId",userId);
          
          String objstr = obj.toString();
-         System.out.println(objstr);
-         // JSONObject newobj = new JSONObject(objstr);
-
          
          JSONParser parser = new JSONParser();
          JSONObject json = (JSONObject) parser.parse(objstr);
-         System.out.println(json.get("Function"));
-
-      
          
          out.writeObject(objstr);
 
-         System.out.println("sent to server, awaiting response");
          InputStream inFromServer = client.getInputStream();
          ObjectInputStream in = new ObjectInputStream(inFromServer);
-         System.out.println("done talking to server");
+         
          String objrecvd = (String)in.readObject();
-         System.out.println("Server says \n" + objrecvd);
+         
          JSONObject jsonrecvd = (JSONObject) parser.parse(objrecvd);
-         System.out.println(jsonrecvd.get("answer"));
+         
 
          int answer = (int)(long)jsonrecvd.get("answer");
 
@@ -858,41 +654,27 @@ public class GreetingClient {
    public static String getAlbumNameFromAlbumId(int albumId) {
 
       try {
-         System.out.println("Connecting to " + serverName + " on port " + port);
+         
          Socket client = new Socket(serverName, port);
-         
-         System.out.println("Just connected to " + client.getRemoteSocketAddress());
-         
-
          OutputStream outToServer = client.getOutputStream();
          ObjectOutputStream out = new ObjectOutputStream(outToServer);
-         
 
          JSONObject obj = new JSONObject();
          obj.put("Function","createAlbumServer");
          obj.put("albumId",albumId);
          
          String objstr = obj.toString();
-         System.out.println(objstr);
-         // JSONObject newobj = new JSONObject(objstr);
-
-         
          JSONParser parser = new JSONParser();
          JSONObject json = (JSONObject) parser.parse(objstr);
-         System.out.println(json.get("Function"));
-
-      
-         
          out.writeObject(objstr);
-
-         System.out.println("sent to server, awaiting response");
+         
          InputStream inFromServer = client.getInputStream();
          ObjectInputStream in = new ObjectInputStream(inFromServer);
-         System.out.println("done talking to server");
+         
          String objrecvd = (String)in.readObject();
-         System.out.println("Server says \n" + objrecvd);
+         
          JSONObject jsonrecvd = (JSONObject) parser.parse(objrecvd);
-         System.out.println(jsonrecvd.get("answer"));
+         
 
          String answer = (String)jsonrecvd.get("answer");
 
@@ -901,22 +683,17 @@ public class GreetingClient {
       } catch (Exception e) {
          e.printStackTrace();
       }
-      return 0;
+      return null;
    }
 
    public static boolean addPicturesToAlbum(Vector<Integer> picIds, int albumId)
    {
          try {
-         System.out.println("Connecting to " + serverName + " on port " + port);
+         
          Socket client = new Socket(serverName, port);
-         
-         System.out.println("Just connected to " + client.getRemoteSocketAddress());
-         
-
          OutputStream outToServer = client.getOutputStream();
          ObjectOutputStream out = new ObjectOutputStream(outToServer);
          
-
          JSONObject obj = new JSONObject();
          obj.put("Function","addPicturesToAlbum");
          JSONArray jsArray = new JSONArray();
@@ -927,38 +704,20 @@ public class GreetingClient {
          obj.put("albumId",albumId);
          
          String objstr = obj.toString();
-         System.out.println(objstr);
-         // JSONObject newobj = new JSONObject(objstr);
-
          
          JSONParser parser = new JSONParser();
          JSONObject json = (JSONObject) parser.parse(objstr);
          JSONArray jarray = (JSONArray)json.get("userIds");
-         // if(jarray!=null)System.out.println("yaaay, it is not null");
-         // else System.out.println("booo! it is null"); 
-         
-         // int n = jarray.size();
-         // System.out.println(n);
-
-         
-         // int[] usid = new int[n];
-         // for(int i=0;i<n;i++)
-         // {
-         //    usid[i] = (int)(long)jarray.get(i);
-         // }
-         // System.out.println(usid[2]);
-      
-         
          out.writeObject(objstr);
 
-         System.out.println("sent to server, awaiting response");
+         
          InputStream inFromServer = client.getInputStream();
          ObjectInputStream in = new ObjectInputStream(inFromServer);
-         System.out.println("done talking to server");
+         
          String objrecvd = (String)in.readObject();
-         System.out.println("Server says \n" + objrecvd);
+         
          JSONObject jsonrecvd = (JSONObject) parser.parse(objrecvd);
-         System.out.println(jsonrecvd.get("answer"));
+         
 
          boolean answer = (boolean)jsonrecvd.get("answer");
          client.close();
@@ -971,12 +730,9 @@ public class GreetingClient {
    public static Vector<Integer> getPicturesInAlbum(int albumId)
    {
          try {
-         System.out.println("Connecting to " + serverName + " on port " + port);
+         
          Socket client = new Socket(serverName, port);
          
-         System.out.println("Just connected to " + client.getRemoteSocketAddress());
-         
-
          OutputStream outToServer = client.getOutputStream();
          ObjectOutputStream out = new ObjectOutputStream(outToServer);
          
@@ -987,41 +743,22 @@ public class GreetingClient {
          obj.put("albumId",albumId);
          
          String objstr = obj.toString();
-         System.out.println(objstr);
-         // JSONObject newobj = new JSONObject(objstr);
-
          
          JSONParser parser = new JSONParser();
          JSONObject json = (JSONObject) parser.parse(objstr);
-         // JSONArray jarray = (JSONArray)json.get("userIds");
-         // if(jarray!=null)System.out.println("yaaay, it is not null");
-         // else System.out.println("booo! it is null"); 
-         
-         // int n = jarray.size();
-         // System.out.println(n);
-
-         
-         // int[] usid = new int[n];
-         // for(int i=0;i<n;i++)
-         // {
-         //    usid[i] = (int)(long)jarray.get(i);
-         // }
-         // System.out.println(usid[2]);
-      
-         
          out.writeObject(objstr);
 
-         System.out.println("sent to server, awaiting response");
+         
          InputStream inFromServer = client.getInputStream();
          ObjectInputStream in = new ObjectInputStream(inFromServer);
-         System.out.println("done talking to server");
+         
          String objrecvd = (String)in.readObject();
-         System.out.println("Server says \n" + objrecvd);
+         
          JSONObject jsonrecvd = (JSONObject) parser.parse(objrecvd);
-         System.out.println(jsonrecvd.get("answer"));
+         
 
          JSONArray jarray = (JSONArray)jsonrecvd.get("answer");
-         if(jarray==null)System.out.println("its a null");
+         
          Vector<Integer> answer = new Vector<Integer>();
          for(int i=0;i<jarray.size();i++)
          {
@@ -1038,43 +775,32 @@ public class GreetingClient {
    public static boolean shareAlbumWithGroup(int albumId, int groupId) {
 
       try {
-         System.out.println("Connecting to " + serverName + " on port " + port);
+         
          Socket client = new Socket(serverName, port);
          
-         System.out.println("Just connected to " + client.getRemoteSocketAddress());
-         
-
          OutputStream outToServer = client.getOutputStream();
          ObjectOutputStream out = new ObjectOutputStream(outToServer);
          
-
          JSONObject obj = new JSONObject();
          obj.put("Function","shareAlbumWithGroup");
          obj.put("albumId",albumId);
          obj.put("groupId",groupId);
          
          String objstr = obj.toString();
-         System.out.println(objstr);
-         // JSONObject newobj = new JSONObject(objstr);
-
          
          JSONParser parser = new JSONParser();
          JSONObject json = (JSONObject) parser.parse(objstr);
-         System.out.println(json.get("Function"));
-
-      
          
          out.writeObject(objstr);
 
-         System.out.println("sent to server, awaiting response");
+         
          InputStream inFromServer = client.getInputStream();
          ObjectInputStream in = new ObjectInputStream(inFromServer);
-         System.out.println("done talking to server");
+         
          String objrecvd = (String)in.readObject();
-         System.out.println("Server says \n" + objrecvd);
+         
          JSONObject jsonrecvd = (JSONObject) parser.parse(objrecvd);
-         System.out.println(jsonrecvd.get("answer"));
-
+         
          boolean answer = (boolean)jsonrecvd.get("answer");
 
          client.close();
@@ -1088,57 +814,34 @@ public class GreetingClient {
    public static Vector<Integer> getAlbumsInGroup(int groupId)
    {
          try {
-         System.out.println("Connecting to " + serverName + " on port " + port);
+         
          Socket client = new Socket(serverName, port);
          
-         System.out.println("Just connected to " + client.getRemoteSocketAddress());
-         
-
          OutputStream outToServer = client.getOutputStream();
          ObjectOutputStream out = new ObjectOutputStream(outToServer);
          
-
          JSONObject obj = new JSONObject();
          obj.put("Function","getAlbumsInGroup");
         
          obj.put("groupId",groupId);
          
          String objstr = obj.toString();
-         System.out.println(objstr);
-         // JSONObject newobj = new JSONObject(objstr);
-
          
          JSONParser parser = new JSONParser();
          JSONObject json = (JSONObject) parser.parse(objstr);
-         // JSONArray jarray = (JSONArray)json.get("userIds");
-         // if(jarray!=null)System.out.println("yaaay, it is not null");
-         // else System.out.println("booo! it is null"); 
-         
-         // int n = jarray.size();
-         // System.out.println(n);
-
-         
-         // int[] usid = new int[n];
-         // for(int i=0;i<n;i++)
-         // {
-         //    usid[i] = (int)(long)jarray.get(i);
-         // }
-         // System.out.println(usid[2]);
-      
-         
          out.writeObject(objstr);
 
-         System.out.println("sent to server, awaiting response");
+         
          InputStream inFromServer = client.getInputStream();
          ObjectInputStream in = new ObjectInputStream(inFromServer);
-         System.out.println("done talking to server");
+         
          String objrecvd = (String)in.readObject();
-         System.out.println("Server says \n" + objrecvd);
+         
          JSONObject jsonrecvd = (JSONObject) parser.parse(objrecvd);
-         System.out.println(jsonrecvd.get("answer"));
+         
 
          JSONArray jarray = (JSONArray)jsonrecvd.get("answer");
-         if(jarray==null)System.out.println("its a null");
+         
          Vector<Integer> answer = new Vector<Integer>();
          for(int i=0;i<jarray.size();i++)
          {

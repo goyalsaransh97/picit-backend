@@ -74,18 +74,11 @@ def eye_mask(img):
     warpMat = cv2.getAffineTransform(np.float32(t2), np.float32(t1))
     dst = np.uint8(cv2.warpAffine(imgEye, warpMat, (img.shape[1], img.shape[0])))
 
-    # cv2.imshow('dst', dst)
-    # cv2.imshow('img', img)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
     alpha = (dst[:, :, 3 : 4]).astype(float) / 255.0
     maskReshaped = dst[:, :, 0 : 3]
 
     out = np.uint8(alpha * maskReshaped + (1 - alpha) * img)
-    # cv2.imshow('eye_mask', out)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
-
+   
     return out
 
 def moustache(img):
@@ -115,17 +108,10 @@ def moustache(img):
     warpMat = cv2.getAffineTransform(np.float32(t2), np.float32(t1))
     dst = np.uint8(cv2.warpAffine(imgEye, warpMat, (img.shape[1], img.shape[0])))
 
-    # cv2.imshow('dst', dst)
-    # cv2.imshow('img', img)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
     alpha = (dst[:, :, 3 : 4]).astype(float) / 255.0
     maskReshaped = dst[:, :, 0 : 3]
 
     out = np.uint8(alpha * maskReshaped + (1 - alpha) * img)
-    # cv2.imshow('moustache', out)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
 
     return out
 
@@ -158,83 +144,82 @@ def jaws(img):
     warpMat = cv2.getPerspectiveTransform(np.float32(t2), np.float32(t1))
     dst = np.uint8(cv2.warpPerspective(imgEye, warpMat, (img.shape[1], img.shape[0])))
 
-    # cv2.imshow('dst', dst)
-    # cv2.imshow('img', img)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
     alpha = (dst[:, :, 3 : 4]).astype(float) / 255.0
     maskReshaped = dst[:, :, 0 : 3]
 
     out = np.uint8(alpha * maskReshaped + (1 - alpha) * img)
-    # cv2.imshow('jaws', out)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
 
     return out
 
+def contrast_improvement(img):
+
+    
+    #-----Converting image to LAB Color model----------------------------------- 
+    lab= cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
+
+    #-----Splitting the LAB image to different channels-------------------------
+    l, a, b = cv2.split(lab)
+ 
+    #-----Applying CLAHE to L-channel-------------------------------------------
+    clahe = cv2.createCLAHE(clipLimit=3.0, tileGridSize=(8,8))
+    cl = clahe.apply(l)
+
+    #-----Merge the CLAHE enhanced L-channel with the a and b channel-----------
+    limg = cv2.merge((cl,a,b))
+
+    #-----Converting image from LAB Color model to RGB model--------------------
+    final = cv2.cvtColor(limg, cv2.COLOR_LAB2BGR)
+    
+    return final
 
 
 if __name__ == '__main__':
-	img = cv2.imread(sys.argv[1])
-	filtercode = sys.argv[2]
-	points = np.array(compute_features(img))
-	out = img.copy()
-	if filtercode=="moustache":
-		out = moustache(img)
-	elif filtercode=="eye_mask":
-		out = eye_mask(img)
-	elif filtercode=="jaws":
-		out = jaws(img)
-	elif filtercode=="grayscale":
-		out = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)	
-	elif filtercode=="blue":
-		out = np.zeros(img.shape,dtype = 'uint8')
-		for i in range(img.shape[0]):
-			for j in range(img.shape[1]):
-				out[i,j] = img[i,j]
-				out[i,j,0] = min(img[i,j,0] + 30,255)
-	elif filtercode=="red":
-		out = np.zeros(img.shape,dtype = 'uint8')
-		for i in range(img.shape[0]):
-			for j in range(img.shape[1]):
-				out[i,j] = img[i,j]
-				out[i,j,2] = min(img[i,j,2] + 50,255)
-	elif filtercode=="negative":
-		out = 255 - img			
-	else:
-		out = img
-		
-		
-	# cv2.imshow('img', out)
-	# cv2.waitKey(0)
-	# cv2.destroyAllWindows()
-	cv2.imwrite('temp2.jpg',out)			
-# fileName = 'images/hillary_clinton.jpg'
-# img = cv2.imread(fileName)
-# print(img.shape)
-# img_copy = np.array(img)
 
-# points = np.array(compute_features(img))
 
-# # draw_points(img_copy, points)
-# # cv2.imshow('img', img_copy)
-# # cv2.waitKey(0)
-# # cv2.destroyAllWindows()
+    img = cv2.imread(sys.argv[1])
+    filtercode = sys.argv[2]
+    out = img.copy()
+    try:
+        
+        
+        if filtercode=="moustache":
+            points = np.array(compute_features(img))
+            out = moustache(img)
+        elif filtercode=="eye_mask":
+            points = np.array(compute_features(img))
+            out = eye_mask(img)
+        elif filtercode=="jaws":
+            points = np.array(compute_features(img))
+            out = jaws(img)
+        elif filtercode=="grayscale":
+            out = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)  
+        elif filtercode=="blue":
+            out = np.zeros(img.shape,dtype = 'uint8')
+            for i in range(img.shape[0]):
+                for j in range(img.shape[1]):
+                    out[i,j] = img[i,j]
+                    out[i,j,0] = min(img[i,j,0] + 30,255)
+        elif filtercode=="red":
+            out = np.zeros(img.shape,dtype = 'uint8')
+            for i in range(img.shape[0]):
+                for j in range(img.shape[1]):
+                    out[i,j] = img[i,j]
+                    out[i,j,2] = min(img[i,j,2] + 50,255)
+            # cv2.imshow('img', out)
+            # cv2.waitKey(0)
+            # cv2.destroyAllWindows()       
+        elif filtercode=="negative":
+            out = 255 - img 
+        elif filtercode=="contrast_improvement":
+            out = contrast_improvement(img)
 
-# out = moustache(img)
-# # cv2.imwrite('images/muchan.jpg', out)
-# cv2.imshow('img', out)
-# cv2.waitKey(0)
-# cv2.destroyAllWindows()
-
-# out = eye_mask(img)
-# # cv2.imwrite('images/eye_mask.jpg', out)
-# cv2.imshow('img', out)
-# cv2.waitKey(0)
-# cv2.destroyAllWindows()
-
-# out = jaws(img)
-# # cv2.imwrite('images/jaws.jpg', out)
-# cv2.imshow('img', out)
-# cv2.waitKey(0)
-# cv2.destroyAllWindows()
+        else:
+            out = img
+    except:
+        print("excepted")
+        pass    
+        
+    # cv2.imshow('img', out)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
+    cv2.imwrite('temp2.jpg',out)			

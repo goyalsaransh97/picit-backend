@@ -30,8 +30,10 @@ public class GreetingServer extends Thread {
                imageOutFile.write(imageByteArray);
                imageOutFile.close();
 
+               System.out.println("about to run python");
                ScriptPython scriptPython = new ScriptPython();
                scriptPython.runScript("temp.jpg",filterCode);
+               System.out.println("python Ran");
 
                File file = new File("temp2.jpg");
                FileInputStream imageInFile = new FileInputStream(file);
@@ -39,7 +41,7 @@ public class GreetingServer extends Thread {
                imageInFile.read(imageData);
                imageInFile.close();
                String imageDataString = Base64.getEncoder().encodeToString(imageData);
-               // System.out.println(imageDataString);
+               
                ans.put("answer",imageDataString);
                file.delete();
             } catch (Exception e){e.printStackTrace();ans.put("answer",-1);}
@@ -252,9 +254,9 @@ public class GreetingServer extends Thread {
 		
       try{  
          Class.forName("com.mysql.jdbc.Driver");  
-         System.out.println("Connecting to aws rds mysql "+url);
+         
          picit.con = DriverManager.getConnection(url, userName, password);  
-         System.out.println("successfully connected to aws rds mysql "+url);
+         
 
 
          Statement stmt = picit.con.createStatement();  
@@ -276,18 +278,18 @@ public class GreetingServer extends Thread {
          rs.next(); 
          picit.albumIdMax = rs.getInt(1) + 1;
 
-         System.out.println(picit.userIdMax+", "+picit.groupIdMax+", "+picit.picIdMax+", "+picit.albumIdMax);
+         
       }catch(Exception e){
-       System.out.println(e);
+       
       } 
 
       while(true) {
          try {
-            System.out.println("Waiting for client on port " + 
-               serverSocket.getLocalPort() + "...");
+            
+               
             Socket server = serverSocket.accept();
             
-            System.out.println("Just connected to " + server.getRemoteSocketAddress());
+            
             
             // DataInputStream in = new DataInputStream(server.getInputStream());
             // String get_req = in.readUTF();
@@ -298,15 +300,15 @@ public class GreetingServer extends Thread {
             
             String get_req=(String)ois.readObject();
             // ois.close();
-            // System.out.println(get_req);
+            
             // Object temp = JSONParser().parse(get_req);
             // JSONObject jobj = (JSONObject) temp;
             JSONParser parser = new JSONParser();
             JSONObject jobj = (JSONObject) parser.parse(get_req);
             JSONObject ans = process(jobj);
             // JSONObject jobj = new JSONObject(get_req);
-            // System.out.println("request_received= " + jobj.toString());
-            System.out.println("Function= " + (String) jobj.get("Function"));
+            
+            
             
             // DataOutputStream out = new DataOutputStream(server.getOutputStream());
             // out.writeUTF(ans.toString());
@@ -314,13 +316,13 @@ public class GreetingServer extends Thread {
             oos.flush();
             String ansString = ans.toString();
             oos.writeObject(ansString);
-            System.out.println("ans= " + ansString);
+            
             oos.flush();
             // oos.close();
             server.close();
             
          } catch (SocketTimeoutException s) {
-            System.out.println("Socket timed out!");
+            
             break;
          } catch (IOException e) {
             e.printStackTrace();
@@ -345,7 +347,7 @@ public class GreetingServer extends Thread {
    }
    
    // int createUser(String emailId, String userName){
-   //    System.out.println("");
+   
    //    return 1997;
    // }
    // int createGroup(int[] userIds, int creatorUserId, String groupName){

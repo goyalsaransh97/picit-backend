@@ -298,7 +298,7 @@ public class GreetingServer extends Thread {
             
             String get_req=(String)ois.readObject();
             // ois.close();
-            // System.out.println(get_req);
+            System.out.println(get_req);
             // Object temp = JSONParser().parse(get_req);
             // JSONObject jobj = (JSONObject) temp;
             JSONParser parser = new JSONParser();

@@ -660,7 +660,7 @@ public class GreetingClient {
          ObjectOutputStream out = new ObjectOutputStream(outToServer);
 
          JSONObject obj = new JSONObject();
-         obj.put("Function","createAlbumServer");
+         obj.put("Function","getAlbumNameFromAlbumId");
          obj.put("albumId",albumId);
          
          String objstr = obj.toString();

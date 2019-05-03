@@ -258,23 +258,23 @@ public class GreetingServer extends Thread {
 
 
          Statement stmt = picit.con.createStatement();  
-         ResultSet rs;
+         ResultSet resultSet;
 
-         rs = stmt.executeQuery("select max(userId) from Users");
-         rs.next(); 
-         picit.userIdMax = rs.getInt(1) + 1;//0 if no users 
+         resultSet = stmt.executeQuery("select max(userId) from Users");
+         resultSet.next(); 
+         picit.userIdMax = resultSet.getInt(1) + 1;//0 if no users 
 
-         rs = stmt.executeQuery("select max(groupId) from Groups");  
-         rs.next(); 
-         picit.groupIdMax = rs.getInt(1) + 1;
+         resultSet = stmt.executeQuery("select max(groupId) from Groups");  
+         resultSet.next(); 
+         picit.groupIdMax = resultSet.getInt(1) + 1;
 
-         rs = stmt.executeQuery("select max(picId) from Pictures");  
-         rs.next(); 
-         picit.picIdMax = rs.getInt(1) + 1;
+         resultSet = stmt.executeQuery("select max(picId) from Pictures");  
+         resultSet.next(); 
+         picit.picIdMax = resultSet.getInt(1) + 1;
 
-         rs = stmt.executeQuery("select max(albumId) from Albums");  
-         rs.next(); 
-         picit.albumIdMax = rs.getInt(1) + 1;
+         resultSet = stmt.executeQuery("select max(albumId) from Albums");  
+         resultSet.next(); 
+         picit.albumIdMax = resultSet.getInt(1) + 1;
 
          System.out.println(picit.userIdMax+", "+picit.groupIdMax+", "+picit.picIdMax+", "+picit.albumIdMax);
       }catch(Exception e){

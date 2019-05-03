@@ -98,9 +98,9 @@ class TestPicit{
 				user.getUseridsFromEmailids(emailIds);
 
 				Statement statement = picit.con.createStatement();
-				ResultSet rs = statement.executeQuery("select * from Users where userId = "+userId);
-				while(rs.next())  
-				System.out.println(rs.getString(1)+"|"+rs.getString(2)+"|"+rs.getString(3)+"|"+rs.getString(4));  
+				ResultSet resultSet = statement.executeQuery("select * from Users where userId = "+userId);
+				while(resultSet.next())  
+				System.out.println(resultSet.getString(1)+"|"+resultSet.getString(2)+"|"+resultSet.getString(3)+"|"+resultSet.getString(4));  
 
 			}catch(Exception e){
 				System.out.println("Test for createUser FAILED!!!");
@@ -143,9 +143,9 @@ class TestPicit{
 				System.out.println(groupId);
 
 				Statement statement = picit.con.createStatement();
-				ResultSet rs = statement.executeQuery("select * from Groups where groupId = "+groupId);
-				while(rs.next())  
-				System.out.println(rs.getString(1)+"|"+rs.getString(2)+"|"+rs.getString(3));  
+				ResultSet resultSet = statement.executeQuery("select * from Groups where groupId = "+groupId);
+				while(resultSet.next())  
+				System.out.println(resultSet.getString(1)+"|"+resultSet.getString(2)+"|"+resultSet.getString(3));  
 
 			}catch(Exception e){
 				System.out.println("Test for createGroup FAILED!!!\n"+e);
@@ -205,9 +205,9 @@ class TestPicit{
 			for(int i=1;i<=numberOfUsers;++i){
 				int userId = i;	
 				Vector<Integer> groupIds = new Vector<Integer>();
-				ResultSet rs = statement.executeQuery("select groupId from UserInGroups where userId = "+userId);
-				while(rs.next()){
-					groupIds.add(rs.getInt(1));
+				ResultSet resultSet = statement.executeQuery("select groupId from UserInGroups where userId = "+userId);
+				while(resultSet.next()){
+					groupIds.add(resultSet.getInt(1));
 				}  
 				// System.out.println(rs.getString(1)+"|"+rs.getString(2)+"|"+rs.getString(3));  
 
@@ -222,7 +222,6 @@ class TestPicit{
 						picture.sharePictureToGroup(picId, userId, groupId);
 						// System.out.println(picId+" shared to "+groupId);
 					}
-					// picIds[j] = picId;
 					picIds.add(picId);
 				}
 				String albumName = RandomString.getAlphaNumericString(30);				
@@ -333,9 +332,9 @@ class User{
 		Statement statement = picit.con.createStatement();
 		Vector<Integer> userIds = new Vector<Integer>();
 		for(String emailId : emailIds){
-			ResultSet rs = statement.executeQuery("select userId from Users where (emailId='"+emailId+"');");
-			if(rs.next()){
-				int userId = rs.getInt(1);
+			ResultSet resultSet = statement.executeQuery("select userId from Users where (emailId='"+emailId+"');");
+			if(resultSet.next()){
+				int userId = resultSet.getInt(1);
 				userIds.add(userId);
 			}	
 		}
@@ -393,16 +392,16 @@ class Group{
 	Vector<String> getGroupsOfUser(int userId) throws SQLException {
 		Vector<String> groups = new Vector<String>();
 		Statement statement = picit.con.createStatement();  
-		ResultSet rs = statement.executeQuery("select groupId,isActive from UserInGroups where (userId='"+userId+"');");			
+		ResultSet resultSet = statement.executeQuery("select groupId,isActive from UserInGroups where (userId='"+userId+"');");			
 
-		while(rs.next()){
-			int groupId = rs.getInt(1);
-			int isActive = rs.getInt(2);
+		while(resultSet.next()){
+			int groupId = resultSet.getInt(1);
+			int isActive = resultSet.getInt(2);
 
 			Statement statement2 = picit.con.createStatement();  
-			ResultSet rs2 = statement2.executeQuery("select groupName from Groups where (groupId='"+groupId+"');");			
-			rs2.next();
-			String groupName = rs2.getString(1);
+			ResultSet resultSet2 = statement2.executeQuery("select groupName from Groups where (groupId='"+groupId+"');");			
+			resultSet2.next();
+			String groupName = resultSet2.getString(1);
 			groups.add(groupId+","+groupName+","+isActive);
 		}
 		return groups;
@@ -412,16 +411,16 @@ class Group{
 	Vector<String> getUsersInGroup(int groupId) throws SQLException {
 		Vector<String> groups = new Vector<String>();
 		Statement statement = picit.con.createStatement();  
-		ResultSet rs = statement.executeQuery("select userId from UserInGroups where (groupId='"+groupId+"');");			
+		ResultSet resultSet = statement.executeQuery("select userId from UserInGroups where (groupId='"+groupId+"');");			
 
-		while(rs.next()){
-			int userId = rs.getInt(1);
+		while(resultSet.next()){
+			int userId = resultSet.getInt(1);
 
 			Statement statement2 = picit.con.createStatement();  
-			ResultSet rs2 = statement2.executeQuery("select userName,emailId from Users where (userId='"+userId+"');");			
-			rs2.next();
-			String userName = rs2.getString(1);
-			String emailId = rs2.getString(2);
+			ResultSet resultSet2 = statement2.executeQuery("select userName,emailId from Users where (userId='"+userId+"');");			
+			resultSet2.next();
+			String userName = resultSet2.getString(1);
+			String emailId = resultSet2.getString(2);
 			groups.add(userId+","+userName+","+emailId);
 		}
 		return groups;
@@ -454,10 +453,10 @@ class Picture{
 	Vector<String> getPicturesInGroup(int groupId) throws SQLException {
 		Vector<String> pictures = new Vector<String>();
 		Statement statement = picit.con.createStatement();  
-		ResultSet rs = statement.executeQuery("select picId,userId from SharedPictures where (groupId='"+groupId+"');");			
-		while(rs.next()){
-			int picId = rs.getInt(1);
-			int userId = rs.getInt(2);
+		ResultSet resultSet = statement.executeQuery("select picId,userId from SharedPictures where (groupId='"+groupId+"');");			
+		while(resultSet.next()){
+			int picId = resultSet.getInt(1);
+			int userId = resultSet.getInt(2);
 			pictures.add(picId+","+userId);
 		}
 		return pictures;
@@ -473,9 +472,9 @@ class Album{
 	String getAlbumNameFromAlbumId(int albumId) throws SQLException {
 		Vector<Integer> pictures = new Vector<Integer>();
 		Statement statement = picit.con.createStatement();  
-		ResultSet rs = statement.executeQuery("select albumName from Albums where (albumId='"+albumId+"');");			
-		rs.next();
-		String albumName = rs.getString(1);
+		ResultSet resultSet = statement.executeQuery("select albumName from Albums where (albumId='"+albumId+"');");			
+		resultSet.next();
+		String albumName = resultSet.getString(1);
 		return albumName;
 	}
 
@@ -502,40 +501,31 @@ class Album{
 	Vector<Integer> getPicturesInAlbum(int albumId) throws SQLException {
 		Vector<Integer> pictures = new Vector<Integer>();
 		Statement statement = picit.con.createStatement();  
-		ResultSet rs3 = statement.executeQuery("select picId from PicturesInAlbums where (albumId='"+albumId+"');");			
-		ResultSet rs2;
-		while(rs3.next()){
-			int picId = rs3.getInt(1);
+		ResultSet resultSet = statement.executeQuery("select picId from PicturesInAlbums where (albumId='"+albumId+"');");			
+		while(resultSet.next()){
+			int picId = resultSet.getInt(1);
 			pictures.add(picId);
 		}
 		return pictures;
 	}
 
 	boolean shareAlbumWithGroup(int albumId, int groupId) throws SQLException {
-		Statement statement = picit.con.createStatement();  
-		// ResultSet rs = statement.executeQuery("select userId from UserInGroups where (groupId='"+groupId+"');");			
-		// Vector<Integer> userIds = new Vector<Integer>();
-		// while(rs.next()){
-		// 	int userId = rs.getInt(1);
-		// 	userIds.add(userId);
-		// }
-		// for(int userId : userIds){
-			try{
-				statement.executeUpdate("insert into SharedAlbums (albumId,groupId) values ('"+albumId+"','"+groupId+"');");
-			}catch(Exception e){
-				System.out.println("Error in shareAlbumWithGroup with groupId="+groupId);
-				e.printStackTrace();
-			} 
-		// }
+		Statement statement = picit.con.createStatement();
+		try{
+			statement.executeUpdate("insert into SharedAlbums (albumId,groupId) values ('"+albumId+"','"+groupId+"');");
+		}catch(Exception e){
+			System.out.println("Error in shareAlbumWithGroup with groupId="+groupId);
+			e.printStackTrace();
+		} 
 		return true;
 	}	
 
 	Vector<Integer> getAlbumsInGroup(int groupId) throws SQLException {
 		Statement statement = picit.con.createStatement();  
-		ResultSet rs = statement.executeQuery("select albumId from SharedAlbums where (groupId='"+groupId+"');");			
+		ResultSet resultSet = statement.executeQuery("select albumId from SharedAlbums where (groupId='"+groupId+"');");			
 		Vector<Integer> albumIds = new Vector<Integer>();
-		while(rs.next()){
-			int albumId = rs.getInt(1);
+		while(resultSet.next()){
+			int albumId = resultSet.getInt(1);
 			albumIds.add(albumId);
 		}
 		return albumIds;

@@ -316,19 +316,20 @@ public class GreetingServer extends Thread {
             oos.writeObject(ansString);
             System.out.println("ans= " + ansString);
             oos.flush();
-            // oos.close();
+            ois.close();
+            oos.close();
             server.close();
             
          } catch (SocketTimeoutException s) {
             System.out.println("Socket timed out!");
-            break;
+            // break;
          } catch (IOException e) {
             e.printStackTrace();
-            break;
+            // break;
          }
          catch (Exception e) {
             e.printStackTrace();
-            break;
+            // break;
          }
       }
       // picit.con.close();  

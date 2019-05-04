@@ -205,9 +205,6 @@ if __name__ == '__main__':
                 for j in range(img.shape[1]):
                     out[i,j] = img[i,j]
                     out[i,j,2] = min(img[i,j,2] + 50,255)
-            # cv2.imshow('img', out)
-            # cv2.waitKey(0)
-            # cv2.destroyAllWindows()       
         elif filtercode=="negative":
             out = 255 - img 
         elif filtercode=="contrast_improvement":
@@ -219,7 +216,4 @@ if __name__ == '__main__':
         print("excepted")
         pass    
         
-    # cv2.imshow('img', out)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
     cv2.imwrite('temp2.jpg',out)			

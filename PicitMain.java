@@ -167,7 +167,8 @@ class Picture{
 	//returns true or false 
 	boolean sharePictureToGroup(int picId, int userId, int groupId) throws SQLException {
 		Statement statement = picit.con.createStatement();  
-		statement.executeUpdate("insert into SharedPictures (picId,userId,groupId) values ('"+picId+"','"+userId+"','"+groupId+"');");
+		statement.executeUpdate("insert into SharedPictures (picId,userId,groupId) values ('"+
+			picId+"','"+userId+"','"+groupId+"');");
 		return true;
 	}
 

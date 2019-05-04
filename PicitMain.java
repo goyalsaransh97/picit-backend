@@ -189,6 +189,7 @@ class Album{
 		this.picit = picit;
 	}
 
+	//returns albumName
 	String getAlbumNameFromAlbumId(int albumId) throws SQLException {
 		Vector<Integer> pictures = new Vector<Integer>();
 		Statement statement = picit.con.createStatement();  
@@ -198,7 +199,7 @@ class Album{
 		return albumName;
 	}
 
-	//return albumId
+	//returns albumId
 	int createAlbumServer(String albumName, int userId) throws SQLException {
 		Statement statement = picit.con.createStatement();  
 		statement.executeUpdate("insert into Albums (albumId,albumName,userId) values ('"+picit.albumIdMax+"','"+albumName+"','"+userId+"');");
@@ -218,6 +219,7 @@ class Album{
 		return true;			
 	}
 
+	//return vector of picIds
 	Vector<Integer> getPicturesInAlbum(int albumId) throws SQLException {
 		Vector<Integer> pictures = new Vector<Integer>();
 		Statement statement = picit.con.createStatement();  
@@ -240,6 +242,7 @@ class Album{
 		return true;
 	}	
 
+	//return vector of albumIds
 	Vector<Integer> getAlbumsInGroup(int groupId) throws SQLException {
 		Statement statement = picit.con.createStatement();  
 		ResultSet resultSet = statement.executeQuery("select albumId from SharedAlbums where (groupId='"+groupId+"');");			
@@ -425,9 +428,7 @@ class TestPicit{
 				while(resultSet.next()){
 					groupIds.add(resultSet.getInt(1));
 				}  
-				// System.out.println(rs.getString(1)+"|"+rs.getString(2)+"|"+rs.getString(3));  
 
-				// int [] picIds = new int [numberOfPicturesForEachUser];
 				Vector<Integer> picIds = new Vector<Integer>();
 				for(int j=0;j<numberOfPicturesForEachUser;++j){
 					// String url = RandomString.getAlphaNumericString(100);				

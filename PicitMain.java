@@ -67,10 +67,12 @@ class Group{
 	//creatorUserId should be in userIds
 	int createGroup(Vector<Integer> userIds, int creatorUserId, String groupName) throws SQLException {
 		Statement statement = picit.con.createStatement();  
-		statement.executeUpdate("insert into Groups (groupId,creatorUserId,groupName) values ('"+picit.groupIdMax+"','"+creatorUserId+"','"+groupName+"');");			
+		statement.executeUpdate("insert into Groups (groupId,creatorUserId,groupName) values ('"+
+			picit.groupIdMax+"','"+creatorUserId+"','"+groupName+"');");			
 		
 		for(int userId : userIds){
-			statement.executeUpdate("insert into UserInGroups (userId,groupId,isActive) values ('"+userId+"','"+picit.groupIdMax+"','"+0+"');");	
+			statement.executeUpdate("insert into UserInGroups (userId,groupId,isActive) values ('"+
+				userId+"','"+picit.groupIdMax+"','"+0+"');");	
 		}
 
 		return picit.groupIdMax++;
@@ -80,7 +82,8 @@ class Group{
 	boolean addUserToGroup(int userId, int groupId, boolean isActive) throws SQLException {
 		Statement statement = picit.con.createStatement(); 
 		int intisActive = isActive?1:0; 
-		statement.executeUpdate("insert into UserInGroups (userId,groupId,isActive) values ('"+userId+"','"+groupId+"','"+intisActive+"');");			
+		statement.executeUpdate("insert into UserInGroups (userId,groupId,isActive) values ('"+
+			userId+"','"+groupId+"','"+intisActive+"');");			
 		return true;
 	}
 

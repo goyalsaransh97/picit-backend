@@ -35,7 +35,8 @@ class User{
 	//returns userId 
 	int createUser(String emailId, String userName) throws SQLException {
 		Statement stmt = picit.con.createStatement();  
-		int rowsAffected = stmt.executeUpdate("insert into Users (userId, emailId, userName) values ('"+picit.userIdMax+"','"+emailId+"','"+userName+"');");
+		int rowsAffected = stmt.executeUpdate("insert into Users (userId, emailId, userName) values ('"+
+			picit.userIdMax+"','"+emailId+"','"+userName+"');");
 		return picit.userIdMax++;
 	}
 
@@ -202,7 +203,8 @@ class Album{
 	//returns albumId
 	int createAlbumServer(String albumName, int userId) throws SQLException {
 		Statement statement = picit.con.createStatement();  
-		statement.executeUpdate("insert into Albums (albumId,albumName,userId) values ('"+picit.albumIdMax+"','"+albumName+"','"+userId+"');");
+		statement.executeUpdate("insert into Albums (albumId,albumName,userId) values ('"+
+			picit.albumIdMax+"','"+albumName+"','"+userId+"');");
 		return picit.albumIdMax++;
 	}
 
@@ -210,7 +212,8 @@ class Album{
 		Statement statement = picit.con.createStatement();  
 		for(int picId : picIds){
 			try{
-				statement.executeUpdate("insert into PicturesInAlbums (albumId,picId) values ('"+albumId+"','"+picId+"');");
+				statement.executeUpdate("insert into PicturesInAlbums (albumId,picId) values ('"+
+					albumId+"','"+picId+"');");
 			}catch(Exception e){
 				System.out.println("Error in addPicturesToAlbum with picId="+picId+" and albumId="+albumId);
 				e.printStackTrace();
@@ -319,7 +322,8 @@ class TestPicit{
 				Statement statement = picit.con.createStatement();
 				ResultSet resultSet = statement.executeQuery("select * from Users where userId = "+userId);
 				while(resultSet.next())  
-				System.out.println(resultSet.getString(1)+"|"+resultSet.getString(2)+"|"+resultSet.getString(3)+"|"+resultSet.getString(4));  
+				System.out.println(resultSet.getString(1)+"|"+resultSet.getString(2)+"|"+
+					resultSet.getString(3)+"|"+resultSet.getString(4));  
 
 			}catch(Exception e){
 				System.out.println("Test for createUser FAILED!!!");
@@ -472,16 +476,13 @@ class RandomString {
         byte[] array = new byte[256]; 
         new Random().nextBytes(array); 
   
-        String randomString 
-            = new String(array, Charset.forName("UTF-8")); 
+        String randomString = new String(array, Charset.forName("UTF-8")); 
   
         // Create a StringBuffer to store the result 
         StringBuffer r = new StringBuffer(); 
   
         // remove all spacial char 
-        String  AlphaNumericString 
-            = randomString 
-                  .replaceAll("[^A-Za-z0-9.]", ""); 
+        String  AlphaNumericString = randomString.replaceAll("[^A-Za-z0-9.]", ""); 
   
         // Append first 20 alphanumeric characters 
         // from the generated random String into the result 

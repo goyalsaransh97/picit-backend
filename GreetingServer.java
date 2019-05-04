@@ -102,7 +102,6 @@ public class GreetingServer extends Thread {
          case "removeUserFromGroup":
             userId = (int)(long) obj.get("userId");
             groupId =(int)(long) obj.get("groupId");
-            // boolean isActive =(boolean) obj.get("isActive");
             try{
                boolean temp = picit.group.removeUserFromGroup(userId, groupId);
                ans.put("answer",temp);
@@ -111,7 +110,6 @@ public class GreetingServer extends Thread {
          case "setGroupActive":
             userId = (int)(long) obj.get("userId");
             groupId =(int)(long) obj.get("groupId");
-            // boolean isActive =(boolean) obj.get("isActive");
             try{
                boolean temp = picit.group.setGroupActive(userId, groupId);
                ans.put("answer",temp);
@@ -344,23 +342,5 @@ public class GreetingServer extends Thread {
          e.printStackTrace();
       }
    }
-   
-   // int createUser(String emailId, String userName){
-   //    System.out.println("");
-   //    return 1997;
-   // }
-   // int createGroup(int[] userIds, int creatorUserId, String groupName){
-   //    return 1998;
-   // }
-   // boolean addUserToGroup(int userId, int groupId, boolean isActive){
-   //    return true;
-   // }
-   // boolean removeUserFromGroup(int userId, int groupId){
-   //    return true;
-   // }
-   // Vector<Integer> getGroupsOfUser(int userId){
-   //    Vector<Integer> v = new Vector<Integer>();
-   //    return v;
-   // }
 }
 
